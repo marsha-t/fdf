@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/21 14:30:45 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:35:17 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
-
-#include <stdio.h>
-
-#endif
+void	ft_putstr_fd(char *s, int fd)
+{
+	if (s)
+	{
+		write(fd, s, ft_strlen(s));
+	}
+}

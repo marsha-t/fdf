@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/21 15:29:59 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/13 10:48:20 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+void	ft_lstclear(t_list **lst, void (*del)(void *))
+{
+	t_list	*start;
+	t_list	*next;
 
-#include <stdio.h>
-
-#endif
+	if ((!lst) || !(*lst))
+		return ;
+	start = *lst;
+	while (start)
+	{
+		next = start->next;
+		ft_lstdelone(start, del);
+		start = next;
+	}
+	*lst = 0;
+}

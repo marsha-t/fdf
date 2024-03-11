@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_lstadd_front.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/21 14:54:40 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:34:21 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
-
-#include <stdio.h>
-
-#endif
+void	ft_lstadd_front(t_list **lst, t_list *new)
+{
+	if ((!lst) || (!new))
+		return ;
+	new->next = *lst;
+	*lst = new;
+}

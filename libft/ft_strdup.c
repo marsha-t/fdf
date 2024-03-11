@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2024/01/03 23:35:32 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:35:32 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+char	*ft_strdup(const char *src)
+{
+	char		*ptr;
+	size_t		n;
+	int			i;
 
-#include <stdio.h>
-
-#endif
+	n = ft_strlen(src);
+	ptr = (char *)malloc(sizeof(char) * (n + 1));
+	if (!ptr)
+		return (0);
+	i = -1;
+	while (src[++i] != '\0')
+		ptr[i] = src[i];
+	ptr[i] = '\0';
+	return (ptr);
+}

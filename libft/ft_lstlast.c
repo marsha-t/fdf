@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_lstlast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/21 15:11:07 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:34:36 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+t_list	*ft_lstlast(t_list *lst)
+{
+	t_list	*current;
 
-#include <stdio.h>
-
-#endif
+	if (!lst)
+		return (0);
+	current = lst;
+	while (current->next)
+	{
+		current = current->next;
+	}
+	return (current);
+}

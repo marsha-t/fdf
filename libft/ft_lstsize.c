@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/21 15:04:34 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:34:47 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+int	ft_lstsize(t_list *lst)
+{
+	int		count;
+	t_list	*current;
 
-#include <stdio.h>
-
-#endif
+	current = lst;
+	count = 0;
+	while (current)
+	{
+		count++;
+		current = current->next;
+	}
+	return (count);
+}

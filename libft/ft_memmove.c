@@ -1,19 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/18 11:17:01 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:35:05 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+void	*ft_memmove(void *dst, const void *src, size_t len)
+{
+	void	*dst_start;
 
-#include <stdio.h>
-
-#endif
+	dst_start = dst;
+	if (src == dst)
+		return (dst);
+	else if (src > dst)
+	{
+		while (len--)
+		{
+			*(char *)dst = *(char *)src;
+			dst++;
+			src++;
+		}
+	}
+	else
+	{
+		while (len--)
+			*(char *)(dst + len) = *(char *)(src + len);
+	}
+	return (dst_start);
+}

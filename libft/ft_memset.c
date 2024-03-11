@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/18 10:29:27 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:35:08 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+void	*ft_memset(void *b, int c, size_t len)
+{
+	void	*start;
 
-#include <stdio.h>
-
-#endif
+	start = b;
+	while (len--)
+	{
+		*(unsigned char *)b = (unsigned char)c;
+		b++;
+	}
+	return (start);
+}

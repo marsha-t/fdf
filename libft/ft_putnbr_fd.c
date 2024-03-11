@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2023/12/21 14:35:05 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:35:15 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+void	ft_putnbr_fd(int n, int fd)
+{
+	char		c;
+	long long	x;
 
-#include <stdio.h>
-
-#endif
+	x = n;
+	if (x < 0)
+	{
+		write(fd, "-", 1);
+		x = -x;
+	}
+	if (x >= 10)
+		ft_putnbr_fd(x / 10, fd);
+	c = x % 10 + '0';
+	write(fd, &c, 1);
+}

@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2024/01/03 23:33:20 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:33:20 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*ptr;
 
-#include <stdio.h>
-
-#endif
+	if ((size > 0) && (count > 0) && (count > (SIZE_MAX / size)))
+		return (0);
+	if ((count == INT_MAX) && (size == INT_MAX))
+		return (0);
+	ptr = (void *)malloc(count * size);
+	if (!ptr)
+		return (0);
+	ft_bzero(ptr, count * size);
+	return (ptr);
+}

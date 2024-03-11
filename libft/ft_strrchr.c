@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.h                                              :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/08 07:25:52 by mateo            ###   ########.fr       */
+/*   Created: 2024/01/03 23:36:22 by mateo             #+#    #+#             */
+/*   Updated: 2024/01/03 23:36:22 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FDF_H
+#include "libft.h"
 
-# define FDF_H
+char	*ft_strrchr(const char *s, int c)
+{
+	const char	*temp;
 
-#include <stdio.h>
-
-#endif
+	temp = 0;
+	while (*s)
+	{
+		if (*s == (char)c)
+			temp = s;
+		s++;
+	}
+	if (*s == (char)c)
+		return ((char *)s);
+	else
+		return ((char *)temp);
+}

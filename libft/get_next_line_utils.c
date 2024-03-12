@@ -6,29 +6,16 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 10:44:44 by mateo             #+#    #+#             */
-/*   Updated: 2024/02/22 09:00:22 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/12 15:35:24 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strchr(const char *s, int c)
+void	*ft_gnl_lstclear(t_gnl_list **lst, int forward)
 {
-	while (*s != '\0')
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (*s == (char)c)
-		return ((char *)s);
-	return (0);
-}
-
-void	*ft_lstclear(t_list **lst, int forward)
-{
-	t_list	*start;
-	t_list	*next;
+	t_gnl_list	*start;
+	t_gnl_list	*next;
 
 	if (!lst || !(*lst))
 		return (0);
@@ -49,12 +36,12 @@ void	*ft_lstclear(t_list **lst, int forward)
 	return (0);
 }
 
-t_list	*ft_lstaddnew(t_list **head, int csize)
+t_gnl_list	*ft_lstaddnew(t_gnl_list **head, int csize)
 {
-	t_list	*new;
-	t_list	*last;
+	t_gnl_list	*new;
+	t_gnl_list	*last;
 
-	new = (t_list *)malloc(sizeof(t_list));
+	new = (t_gnl_list *)malloc(sizeof(t_gnl_list));
 	if (!new)
 		return (0);
 	new->next = 0;
@@ -77,9 +64,9 @@ t_list	*ft_lstaddnew(t_list **head, int csize)
 	return (new);
 }
 
-t_list	*ft_lstsplit(t_list *last, char *newline)
+t_gnl_list	*ft_lstsplit(t_gnl_list *last, char *newline)
 {
-	t_list	*new;
+	t_gnl_list	*new;
 	int		newlen;
 	int		i;
 
@@ -106,7 +93,7 @@ t_list	*ft_lstsplit(t_list *last, char *newline)
 	return (last);
 }
 
-int	ft_lststrlen(t_list *head, t_list *last)
+int	ft_lststrlen(t_gnl_list *head, t_gnl_list *last)
 {
 	int		totlen;
 	char	*temp;

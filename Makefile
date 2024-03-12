@@ -33,5 +33,8 @@ fclean: clean
 
 re: fclean all
 
+test: 
+	cc test.c -L $(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit -o test
+
 .PHONY: all clean fclean re 
 

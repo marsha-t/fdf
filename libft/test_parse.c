@@ -384,7 +384,7 @@ int	ft_strisnum(char *str)
 		// 	printf("offending one: %c\n", *str);
 		// 	return (0);
 		// }
-		str++;
+		// str++;
 	}
 	return (1);
 }
@@ -441,7 +441,7 @@ int	ft_check_fdf(char *file) // new function
 	while (file[i])
 		i++;
 	i--;
-	if (file[i] == 'f' && file[i - 1] == 'd' && file[i - 2] == 'f')
+	if (file[i] == 'f' && file[i - 1] == 'd' && file[i - 2] == 'f' && file[i - 3] == '.')
 		return (1);
 	return (0);
 }
@@ -531,7 +531,6 @@ int	main(int argc, char **argv)
 	t_fdf	*fdf;
 	if (argc == 2)
 	{
-		printf("size: t_pt: %lu, t_fdf: %lu\n", sizeof(t_pt), sizeof(t_fdf));
 		fdf = ft_init(argv[1]);
 		printf("fdf: map_fd: %d, map_width: %d, map_height: %d\n", fdf->map_fd, fdf->map_width, fdf->map_height);
 		printf("map: (0,0): (%d, %d, %d, %d)\n", fdf->map[0][0].x, fdf->map[0][0].y, fdf->map[0][0].z, fdf->map[0][0].colour);

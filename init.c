@@ -16,7 +16,7 @@ int	ft_nl_read(char *buffer)
 }
 
 /* ft_map_height returns the height of the map */
-int	ft_map_height(char *file, char **split, t_tdf *fdf)
+int	ft_map_height(char *file, char **split, t_fdf *fdf)
 {
 	int		fd;
 	int		height;
@@ -48,6 +48,7 @@ int	ft_map_height(char *file, char **split, t_tdf *fdf)
 		if (r > 0)
 			height += ft_nl_read(buffer);
 	}
+	free(buffer);
 	if (r < -1)
 	{
 		close(fdf->map_fd);
@@ -101,11 +102,15 @@ int	ft_not_base(char *str, char *base)
 	- number is made of hex characters */
 int	ft_check_colour(char *str)
 {
-	int	i;
+	int		i;
+	char	*nl;
 
 	i = 0;
 	if (str[0] != '0' || str[1] != 'x')
 		return (0);
+	nl = ft_strchr(&str[2], '\n');
+	if (nl)
+		*nl = '\0';
 	if (ft_strlen(&str[2]) != 6)
 		return (0);
 	if (ft_not_base(&str[2], "0123456789ABCDEF") == 1)
@@ -117,17 +122,17 @@ int	ft_check_colour(char *str)
 	- checks that the colour is provided correctly
 	- parses a correctly provided colour and returns the DECIMAL number
 	- returns a default colour if none is provided*/
-int	ft_map_colour(char **split, t_pt *row, t_fdf *fdf)
+int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 {
 	char *str;
 
-	str = split[row->x];
+	str = split[x];
 	while (*str && *str != ',')
 		str++;
 	if (*str == ',' && ft_check_colour(str + 1) == 1)
 	{
 		str += 3;
-		return (ft_atoi_base(str, "0123456789ABCDEF"));	// do colours need to be in unsigned
+		return (ft_atoi_base(str, "0123456789ABCDEF"));
 	}
 	else if (*str == ',' && ft_check_colour(str + 1) == 0)
 	{
@@ -140,15 +145,17 @@ int	ft_map_colour(char **split, t_pt *row, t_fdf *fdf)
 	else
 		return (ft_atoi_base(DEFAULT_MAP_COLOUR, "0123456789ABCDEF"));
 }
+
 /* ft_strisnum checks whether str is made up of digits 
 	(until a null terminator or a comma) */
 int	ft_strisnum(char *str)
 {
-	while (*str && *str != ',')
+	while (*str && *str != ',' && *str != '\n')
 	{
-		if (ft_isdigit(*str) == 0)
+		if (ft_isdigit(*str) == 1 || *str == '-')
+			str++;
+		else
 			return (0);
-		str++;
 	}
 	return (1);
 }
@@ -183,13 +190,26 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 			ft_free_fdf(fdf, y - 1);
 			ft_error(ERR_FILE);
 		}
-		row[x].colour = ft_map_colour(split, row, fdf);
+		row[x].colour = ft_map_colour(split, row, x, fdf);
 		x++;
 	}
 	ft_free_arrstr(split);
 	return (row);
 }
 
+/*	ft_check_fdf checks that the file ends with .fdf */
+int	ft_check_fdf(char *file)
+{
+	int	i;
+	
+	i = 0;
+	while (file[i])
+		i++;
+	i--;
+	if (file[i] == 'f' && file[i - 1] == 'd' && file[i - 2] == 'f' && file[i - 3] == '.')
+		return (1);
+	return (0);
+}
 void	ft_parse_map(t_fdf *fdf, char *file)
 {
 	int		fd;
@@ -197,6 +217,11 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	char	**split;
 	int		y;
 
+	if (ft_check_fdf(file) == 0)
+	{
+		ft_free_fdf(fdf, -2);
+		ft_error(ERR_EXT);
+	}
 	fdf->map_fd = open(file, O_RDONLY);
 	if (fdf->map_fd == -1)
 	{
@@ -224,14 +249,15 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	fdf->map_width = ft_count_split(split);
 	fdf->map[0] = ft_fill_pt(fdf, split, 0);
 	y = 1;
-	while (line)
+	while (y < fdf->map_height)
 	{
 		line = get_next_line(fdf->map_fd);
 		split = ft_split(line, ' ');
 		free(line);
 		if (ft_count_split(split) == fdf->map_width)
 		{
-			fdf->map[y++] = ft_fill_pt(fdf, split, y);
+			fdf->map[y] = ft_fill_pt(fdf, split, y);
+			y++;
 		}
 		else
 		{
@@ -243,7 +269,7 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	}
 	if (close(fdf->map_fd) == -1)
 	{
-		ft_free_fdf(fdf, fdf->map_height);
+		ft_free_fdf(fdf, fdf->map_height - 1);
 		ft_error(ERR_CLOSE);
 	}
 }

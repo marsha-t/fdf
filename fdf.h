@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/15 11:54:44 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/17 10:25:59 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@
 # define ERR_IRREGULAR	"Error in file: irregular line lengths"
 # define ERR_MALLOC_ROW	"Error allocating for row"
 # define ERR_COLOUR		"Error in file: colour not passed formatted properly"
+# define ERR_EXT		"File is not .fdf"
 
 # define WIDTH 1000
 # define HEIGHT 2000
 
-# define DEFAULT_MAP_COLOUR	"0xFFFFFF"
+# define DEFAULT_MAP_COLOUR	"FFFFFF"
 
 typedef struct 
 {
@@ -78,7 +79,6 @@ t_fdf	*ft_init(char *file);
 void	ft_free_arrstr(char **split);
 void	ft_free_fdf(t_fdf *fdf, int free_map); // to test!
 void	ft_error(char *str);
-
 
 /*ft_atoi_base.c*/
 int	ft_base_ok(char *base);

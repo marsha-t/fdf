@@ -4,7 +4,7 @@ LIBFT_DIR = libft
 MINILIBX = libmlx.a
 MINILIBX_DIR = mlx
 CFLAGS = -Wall -Wextra -Werror
-CFILES = main.c init.c utils.c
+CFILES = main.c init.c exit.c
 OFILES = ${CFILES:.c=.o}
 
 all: $(NAME)

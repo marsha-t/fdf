@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/17 10:25:59 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/18 12:50:44 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@
 # define ERR_MALLOC_ROW	"Error allocating for row"
 # define ERR_COLOUR		"Error in file: colour not passed formatted properly"
 # define ERR_EXT		"File is not .fdf"
-
+# define ERR_MALLOC_NPT	"Error allocating for new point"
+# define ERR_MALLOC_TPT "Error allocating for temp point"
 # define WIDTH 1000
 # define HEIGHT 2000
 
@@ -65,6 +66,13 @@ typedef	struct	s_fdf
 	int		map_width;
 	int		map_height;
 	t_pt	**map;
+	int		zoom;
+	double	x_angle;
+	double	y_angle;
+	double	z_angle;
+	int		x_offset;
+	int		y_offset;
+	int		iso;
 }				t_fdf;
 
 /*init.c*/

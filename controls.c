@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:14:06 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/18 12:52:05 by mateo            ###   ########.fr       */
+/*   Created: 2024/03/17 19:09:33 by mateo             #+#    #+#             */
+/*   Updated: 2024/03/17 19:25:36 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int	main(int argc, char **argv)
+int	key_hook(int key, void *param)
 {
-	t_fdf	*fdf;
-	if (argc == 2)
+	if (key == MAIN_PAD_ESC)	// check key codes on Mac
 	{
-		fdf = ft_init(argv[1]);
-		ft_draw(fdf);
-		ft_controls(fdf);
-		mlx_loop(fdf->mlx);
-
+		exit
 	}
-	else
-		ft_error(ERR_ARGC);
-	return (0);	
 }
 
+void	ft_controls(t_fdf *fdf)
+{
+	mlx_key_hook(fdf->win, ft_key, fdf);
+}

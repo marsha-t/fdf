@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
+/*   Updated: 2024/03/17 19:07:02 by mateo            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 /* ft_nl_read returns the number of new line characters contained in buffer */
@@ -285,22 +297,29 @@ t_fdf	*ft_init(char *file)
 	fdf->mlx = mlx_init();
 	if (!fdf->mlx)
 	{
-		ft_free_fdf(fdf, fdf->height); 
+		ft_free_fdf(fdf, fdf->map_height - 1); 
 		ft_error(ERR_MLX, -1);
 	}
 	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "fdf");
 	if (!fdf->win)
 	{
-		ft_free_fdf(fdf, fdf->height);
+		ft_free_fdf(fdf, fdf->map_height - 1);
 		ft_error(ERR_WIN, -1);
 	}
 	fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
 	if (!fdf->img)
 	{
 		mlx_destroy_window(fdf->mlx, fdf->win);
-		ft_free_fdf(fdf, fdf->height);
+		ft_free_fdf(fdf, fdf->map_height - 1);
 		ft_error(ERR_IMG, -1);
 	}
 	fdf->data_addr = mlx_get_data_addr(fdf->img, &fdf->bits_per_pixel, &fdf->size_line, &fdf->endian);
+	// fdf->zoom = 
+	// fdf->x_angle = 
+	// fdf->y_angle = 
+	// fdf->z_angle =
+	// fdf->x_offset = 0;
+	// fdf->y_offset = 0;
+	// fdf->iso = 1;
 	return (fdf);
 }

@@ -4,7 +4,7 @@ LIBFT_DIR = libft
 MINILIBX = libmlx.a
 MINILIBX_DIR = mlx
 CFLAGS = -Wall -Wextra -Werror
-CFILES = main.c init.c exit.c
+CFILES = controls.c draw.c exit.c ft_atoi_base.c init.c main.c
 OFILES = ${CFILES:.c=.o}
 
 all: $(NAME)
@@ -12,7 +12,8 @@ all: $(NAME)
 %o: %c 
 	cc ${CFLAGS} -c $< -o ${<:.c=.o}
 
-$(NAME): $(LIBFT) $(OFILES) $(MINILIBX)
+# $(NAME): $(LIBFT) $(OFILES) $(MINILIBX)
+$(NAME): $(LIBFT) $(OFILES)
 	cc $(CFLAGS) $(OFILES) -o $(NAME) -L $(LIBFT_DIR) -lft -L $(MINILIBX_DIR) -lmlx -lm -framework OpenGL -framework AppKit
 
 $(LIBFT):
@@ -24,12 +25,14 @@ $(MINILIBX):
 clean: 
 	rm -f $(OFILES)
 	make -C $(LIBFT_DIR) clean
-	make -C $(MINILIBX_DIR) clean
+	
+# make -C $(MINILIBX_DIR) clean // temp
 
 fclean: clean
 	rm -f $(NAME)
 	make -C $(LIBFT_DIR) fclean
-	rm -f $(MINILIBX_DIR) $(MINILIBX)
+	
+# rm -f $(MINILIBX_DIR)/$(MINILIBX) // temp
 
 re: fclean all
 

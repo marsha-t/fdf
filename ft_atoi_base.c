@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:45:18 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/16 17:11:47 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/19 16:08:27 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_base_ok(char *base)
 {
 	int	i;
-	int	j;
+	size_t	j;
 
 	if (ft_strlen(base) == 0 || ft_strlen(base) == 1)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/18 12:50:44 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 17:23:36 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,42 @@
 # define ERR_EXT		"File is not .fdf"
 # define ERR_MALLOC_NPT	"Error allocating for new point"
 # define ERR_MALLOC_TPT "Error allocating for temp point"
-# define WIDTH 1000
-# define HEIGHT 2000
+
+# define WIDTH 500
+# define HEIGHT 500
+
+# define KEY_ESC 53
+# define KEY_Q 12
+# define KEY_W 13
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_Z 6
+# define KEY_X 7
+# define KEY_UP 126
+# define KEY_DOWN 125
+# define KEY_RIGHT 124
+# define KEY_LEFT 123
+
+# define KEY_ONE 18
+# define KEY_TWO 19
+# define KEY_THREE 20
+# define KEY_FOUR 21
+# define KEY_FIVE 23
+# define KEY_SIX 22
+# define KEY_SEVEN 26
+
+# define KEY_NP_ONE 83
+# define KEY_NP_TWO 84
+# define KEY_NP_THREE 85
+# define KEY_NP_FOUR 86
+# define KEY_NP_FIVE 87
+# define KEY_NP_SIX 88
+# define KEY_NP_SEVEN 89
+
+# define KEY_PLUS 24
+# define KEY_MINUS 27
+# define KEY_NP_PLUS 69
+# define KEY_NP_MINUS 78
 
 # define DEFAULT_MAP_COLOUR	"FFFFFF"
 
@@ -66,27 +100,55 @@ typedef	struct	s_fdf
 	int		map_width;
 	int		map_height;
 	t_pt	**map;
-	int		zoom;
+	double	zoom;
 	double	x_angle;
 	double	y_angle;
 	double	z_angle;
-	int		x_offset;
-	int		y_offset;
-	int		iso;
+	int		x_shift;
+	int		y_shift;
+	int		project;
 }				t_fdf;
+
+/*controls.c*/
+void	ft_rotate(int key, t_fdf *fdf);
+void	ft_move(int key, t_fdf *fdf);
+void	ft_project(int key, t_fdf *fdf);
+void	ft_zoom(int key, t_fdf *fdf);
+int	ft_key(int key, void *param);
+
+/*draw.c*/
+void	ft_rotate_x(int *y, int *z, double x_angle);
+void	ft_rotate_y(int *x, int *z, double y_angle);
+void	ft_rotate_z(int *x, int *y, double z_angle);
+t_pt	*ft_transform(t_pt point, t_fdf *fdf);
+int		ft_abs(int x);
+void	ft_put_pixel(t_pt *pt, t_fdf *fdf);
+int		ft_gradient(t_pt *start, t_pt *end, t_pt *temp);
+t_pt	*ft_line_setup(t_pt **start, t_pt **end, t_fdf *fdf);
+
+void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
+int		ft_draw(t_fdf *fdf);
 
 /*init.c*/
 int	ft_nl_read(char *buffer);
-int	ft_map_height(char *file);
+int	ft_map_height(char *file, char **split, t_fdf *fdf);
 int	ft_count_split(char **split);
-t_pt	*ft_to_pt(char **split);
+int	ft_not_base(char *str, char *base);
+int	ft_check_colour(char *str);
+int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
+int	ft_strisnum(char *str);
+t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
+int	ft_check_fdf(char *file);
 void	ft_parse_map(t_fdf *fdf, char *file);
+int	ft_min(int a, int b);
+void	ft_init_transform(t_fdf *fdf);
 t_fdf	*ft_init(char *file);
 
 /*exit.c*/
 void	ft_free_arrstr(char **split);
-void	ft_free_fdf(t_fdf *fdf, int free_map); // to test!
+void	ft_free_fdf(t_fdf *fdf, int free_map);
 void	ft_error(char *str);
+int		ft_close(void *param);
 
 /*ft_atoi_base.c*/
 int	ft_base_ok(char *base);

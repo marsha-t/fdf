@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 06:38:17 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/17 10:27:08 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 17:15:31 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,19 @@ void	ft_free_fdf(t_fdf *fdf, int free_map)
 void	ft_error(char *str)
 {
 	if (errno == 0)
-	{
 		ft_putendl_fd(str, 2);
-	}
 	else
-	{
 		perror(str);
-	}
 	exit(1);
+}
+
+int	ft_close(void *param)
+{
+	t_fdf	*fdf;
+
+	fdf = (t_fdf *)param;
+	mlx_destroy_image(fdf->mlx, fdf->img);
+	mlx_destroy_window(fdf->mlx, fdf->win);
+	ft_free_fdf(fdf, fdf->map_height - 1);
+	exit(0);
 }

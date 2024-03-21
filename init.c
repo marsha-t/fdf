@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/17 19:07:02 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:19:28 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,8 @@ int	ft_count_split(char **split)
 }
 
 /* ft_not_base checks where str contains characters that are not in base */
-int	ft_not_base(char *str, char *base)
+int	ft_not_base(char *str, char *base) // check whether duplicates sth needed for atoi_base?
 {
-	int	j;
-
 	while (*str)
 	{	
 		if (ft_strchr(base, *str) == 0)
@@ -155,7 +153,10 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 		ft_error(ERR_FILE);
 	}
 	else
+	{
 		return (ft_atoi_base(DEFAULT_MAP_COLOUR, "0123456789ABCDEF"));
+	}
+	return (ft_atoi_base(DEFAULT_MAP_COLOUR, "0123456789ABCDEF")); // added to avoid error; not sure why
 }
 
 /* ft_strisnum checks whether str is made up of digits 
@@ -224,7 +225,6 @@ int	ft_check_fdf(char *file)
 }
 void	ft_parse_map(t_fdf *fdf, char *file)
 {
-	int		fd;
 	char	*line;
 	char	**split;
 	int		y;
@@ -286,6 +286,24 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	}
 }
 
+int	ft_min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
+}
+
+void	ft_init_transform(t_fdf *fdf)
+{
+	fdf->zoom = ft_min(WIDTH / fdf->map_width / 2, HEIGHT / fdf->map_height / 2);
+	fdf->x_angle = 0;
+	fdf->y_angle = 0;
+	fdf->z_angle = 0;
+	fdf->x_shift = 0;
+	fdf->y_shift = 0;
+	fdf->project = 0;
+}
+
 t_fdf	*ft_init(char *file)
 {
 	t_fdf	*fdf;
@@ -298,28 +316,23 @@ t_fdf	*ft_init(char *file)
 	if (!fdf->mlx)
 	{
 		ft_free_fdf(fdf, fdf->map_height - 1); 
-		ft_error(ERR_MLX, -1);
+		ft_error(ERR_MLX);
 	}
 	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "fdf");
 	if (!fdf->win)
 	{
 		ft_free_fdf(fdf, fdf->map_height - 1);
-		ft_error(ERR_WIN, -1);
+		ft_error(ERR_WIN);
 	}
 	fdf->img = mlx_new_image(fdf->mlx, WIDTH, HEIGHT);
 	if (!fdf->img)
 	{
 		mlx_destroy_window(fdf->mlx, fdf->win);
 		ft_free_fdf(fdf, fdf->map_height - 1);
-		ft_error(ERR_IMG, -1);
+		ft_error(ERR_IMG);
 	}
 	fdf->data_addr = mlx_get_data_addr(fdf->img, &fdf->bits_per_pixel, &fdf->size_line, &fdf->endian);
-	// fdf->zoom = 
-	// fdf->x_angle = 
-	// fdf->y_angle = 
-	// fdf->z_angle =
-	// fdf->x_offset = 0;
-	// fdf->y_offset = 0;
-	// fdf->iso = 1;
+	ft_init_transform(fdf);
 	return (fdf);
 }
+

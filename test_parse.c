@@ -43,7 +43,7 @@ typedef	struct	s_fdf
 	void	*win;
 	void	*img;
 	char	*data_addr;
-	int		bits_per_pixel;
+	int		bpp;
 	int		size_line;
 	int		endian;
 	int		map_fd;

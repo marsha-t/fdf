@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 06:38:17 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 17:15:31 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:02:31 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	ft_free_arrstr(char **split)
 void	ft_free_fdf(t_fdf *fdf, int free_map)
 {
 	int	h;
-	
+
 	if (free_map >= 0)
 	{
 		h = 0;

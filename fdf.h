@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 17:23:36 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:03:44 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ typedef	struct	s_fdf
 	void	*win;
 	void	*img;
 	char	*data_addr;
-	int		bits_per_pixel;
+	int		bpp;
 	int		size_line;
 	int		endian;
 	int		map_fd;

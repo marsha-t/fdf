@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 16:19:28 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 16:06:58 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 int	ft_nl_read(char *buffer)
 {
 	int	count;
-	
+
 	count = 0;
 	while (*buffer)
 	{
@@ -84,7 +84,7 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 int	ft_count_split(char **split)
 {
 	int	count;
-	
+
 	count = 0;
 	while (*split)
 	{
@@ -98,7 +98,7 @@ int	ft_count_split(char **split)
 int	ft_not_base(char *str, char *base) // check whether duplicates sth needed for atoi_base?
 {
 	while (*str)
-	{	
+	{
 		if (ft_strchr(base, *str) == 0)
 			return (1);
 		str++;
@@ -134,7 +134,7 @@ int	ft_check_colour(char *str)
 	- returns a default colour if none is provided*/
 int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 {
-	char *str;
+	char	*str;
 
 	str = split[x];
 	while (*str && *str != ',')
@@ -173,15 +173,15 @@ int	ft_strisnum(char *str)
 	return (1);
 }
 
-/* ft_fill_pt parses info captured in split (array of str) into an array of t_pt 
+/* ft_fill_pt parses array of str into array of t_pt 
 	- frees split after parsing */
 t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 {
-	int x;
+	int		x;
 	t_pt	*row;
 
 	row = malloc(sizeof(t_pt) * fdf->map_width);
-	if (!row) 
+	if (!row)
 	{
 		close(fdf->map_fd);
 		ft_free_arrstr(split);
@@ -214,15 +214,17 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 int	ft_check_fdf(char *file)
 {
 	int	i;
-	
+
 	i = 0;
 	while (file[i])
 		i++;
 	i--;
-	if (file[i] == 'f' && file[i - 1] == 'd' && file[i - 2] == 'f' && file[i - 3] == '.')
+	if (file[i] == 'f' && file[i - 1] == 'd' \
+		&& file[i - 2] == 'f' && file[i - 3] == '.')
 		return (1);
 	return (0);
 }
+
 void	ft_parse_map(t_fdf *fdf, char *file)
 {
 	char	*line;
@@ -295,7 +297,8 @@ int	ft_min(int a, int b)
 
 void	ft_init_transform(t_fdf *fdf)
 {
-	fdf->zoom = ft_min(WIDTH / fdf->map_width / 2, HEIGHT / fdf->map_height / 2);
+	fdf->zoom = ft_min(WIDTH / fdf->map_width / 2, \
+		HEIGHT / fdf->map_height / 2);
 	fdf->x_angle = 0;
 	fdf->y_angle = 0;
 	fdf->z_angle = 0;
@@ -315,7 +318,7 @@ t_fdf	*ft_init(char *file)
 	fdf->mlx = mlx_init();
 	if (!fdf->mlx)
 	{
-		ft_free_fdf(fdf, fdf->map_height - 1); 
+		ft_free_fdf(fdf, fdf->map_height - 1);
 		ft_error(ERR_MLX);
 	}
 	fdf->win = mlx_new_window(fdf->mlx, WIDTH, HEIGHT, "fdf");
@@ -331,8 +334,8 @@ t_fdf	*ft_init(char *file)
 		ft_free_fdf(fdf, fdf->map_height - 1);
 		ft_error(ERR_IMG);
 	}
-	fdf->data_addr = mlx_get_data_addr(fdf->img, &fdf->bits_per_pixel, &fdf->size_line, &fdf->endian);
+	fdf->data_addr = mlx_get_data_addr(fdf->img, &fdf->bpp, \
+		&fdf->size_line, &fdf->endian);
 	ft_init_transform(fdf);
 	return (fdf);
 }
-

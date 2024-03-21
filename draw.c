@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:24 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 17:29:22 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/21 15:54:30 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,14 +141,6 @@ t_pt	*ft_line_setup(t_pt **start, t_pt **end, t_fdf *fdf)
 	return (temp);
 }
 
-void	ft_line_gentle(t_pt *start, t_pt *end, t_pt *temp)
-{
-	int	decision;
-
-	decision = 2 * ft_abs(dy) - dx;
-	
-}
-
 void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf)
 {
 	t_pt *temp;
@@ -201,59 +193,6 @@ void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf)
 	free(end);
 	free(temp);
 }
-
-// void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf)
-// {
-// 	t_pt *temp;
-// 	int	dx;
-// 	int dy;
-// 	int decision;
-
-// 	temp = ft_line_setup(&start, &end, fdf);
-// 	dx = end->x - start->x;
-//     dy = end->y - start->y;
-//     ft_put_pixel(start, fdf);
-// 	if (ft_abs(dy) < dx)
-// 		decision = 2 * ft_abs(dy) - dx;
-// 	else
-// 		decision = 2 * dx - ft_abs(dy);
-//     while (temp->x != end->x || temp->y != end->y) {
-
-// 		if (ft_abs(dy) < dx)
-// 		{
-// 			temp->x += 1;
-// 			if (decision < 0)
-// 				decision += 2 * ft_abs(dy);
-// 			else
-// 			{
-// 				decision += 2 * ft_abs(dy) - 2 * dx;
-// 				if (dy > 0)
-// 					temp->y += 1;
-// 				else if (dy < 0)
-// 					temp->y -= 1;
-// 			}
-// 		}
-// 		else
-// 		{
-// 			if (dy > 0)
-// 				temp->y += 1;
-// 			else if (dy < 0)
-// 				temp->y -= 1;
-// 			if (decision < 0)
-// 				decision += 2 * dx;
-// 			else
-// 			{
-// 				decision += 2 * dx - 2 * ft_abs(dy);
-// 				temp->x += 1;
-// 			}
-// 		}
-// 		temp->colour = ft_gradient(start, end, temp);
-// 		ft_put_pixel(temp, fdf);
-//     }
-// 	free(start);
-// 	free(end);
-// 	free(temp);
-// }
 
 int	ft_draw(t_fdf *fdf)
 {

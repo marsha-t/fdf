@@ -23,7 +23,7 @@
 # define WIDTH 1000
 # define HEIGHT 2000
 
-# define DEFAULT_MAP_COLOUR	"FFFFFF" // removed 0x
+# define DEFAULT_COLOUR	0XFFFFFF // removed 0x
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 5
@@ -84,7 +84,7 @@ int			ft_lststrlen(t_gnl_list *head, t_gnl_list *last);
 char		*ft_lststrcat(int len, t_gnl_list **head, char *fullline);
 char		*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last);
 char		*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head);
-char		*get_next_line(int fd);
+char		*get_next_line(int fd, int free_static);
 
 
 /*ft_atoi_base.c*/
@@ -237,9 +237,11 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 	char	*buffer;
 	int		r;
 
-	fd = open(file, O_RDONLY);
+	(void)file;
+	fd = open("noexist.txt", O_RDONLY);
 	if (fd == -1)
 	{
+		get_next_line(fdf->map_height, 1);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_OPEN);
@@ -250,6 +252,7 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 	{
 		close(fdf->map_fd);
 		close(fd);
+		get_next_line(fdf->map_height, 1);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_MALLOC_BUF);
@@ -267,6 +270,7 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 	{
 		close(fdf->map_fd);
 		close(fd);
+		get_next_line(fdf->map_height, 1);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_READ);
@@ -274,6 +278,7 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 	if (close(fd) == -1)
 	{
 		close(fdf->map_fd);
+		get_next_line(fdf->map_height, 1);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_CLOSE);
@@ -367,12 +372,17 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf) // added x
 		ft_error(ERR_FILE);
 	}
 	else
-		return (ft_atoi_base(DEFAULT_MAP_COLOUR, "0123456789ABCDEF"));
+		return (DEFAULT_COLOUR);
 }
 /* ft_strisnum checks whether str is made up of digits or minus //added 'or minus'
 	(until a null terminator or a comma) */
 int	ft_strisnum(char *str)
 {
+	if (*str == '\0' || *str == '\n') // added to deal with empty or 1 nl files
+	{
+		printf("imm null\n");
+		return(0);
+	}
 	while (*str && *str != ',' && *str != '\n') 	// amended to include new line
 	{
 		if (ft_isdigit(*str) == 1 || *str == '-') // amended to include negative numbers
@@ -397,7 +407,6 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 	t_pt	*row;
 
 	row = malloc(sizeof(t_pt) * fdf->map_width);
-	printf("row: %lu\n", sizeof(t_pt) * fdf->map_width);
 	if (!row) 
 	{
 		close(fdf->map_fd);
@@ -416,9 +425,8 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 			row[x].z = ft_atoi(split[x]);
 		else
 		{
-			printf("invalid character\n");
-			printf("sizeof row: %lu, *row: %lu\n", sizeof(row), sizeof(*row));
 			free(row);
+			get_next_line(fdf->map_fd, 1); /// MT: added
 			close(fdf->map_fd);
 			ft_free_arrstr(split);
 			printf("y-1: %d\n", y -1);
@@ -464,7 +472,7 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_OPEN);
 	}
-	line = get_next_line(fdf->map_fd);
+	line = get_next_line(fdf->map_fd, 0); // add zero
 	printf("line 1: %s\n", line);
 	if (!line)
 	{
@@ -473,10 +481,11 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 		ft_error(ERR_FILE);
 	}
 	split = ft_split(line, ' ');
+	if (!split)
+		printf("split is null\n");
 	free(line);
 	fdf->map_height = ft_map_height(file, split, fdf);
 	fdf->map = malloc(sizeof(t_pt *) * fdf->map_height);
-	printf("sizeof map: %lu\n", sizeof(t_pt *)*fdf->map_height);
 	if (!fdf->map)
 	{
 		close(fdf->map_fd);
@@ -490,7 +499,7 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	// while (line && line[0] != '\0') // added null condition // removed
 	while (y < fdf->map_height)
 	{
-		line = get_next_line(fdf->map_fd);
+		line = get_next_line(fdf->map_fd, 0); // added 0
 		printf("line: %s\n", line);
 		split = ft_split(line, ' ');
 		free(line);
@@ -538,8 +547,6 @@ int	main(int argc, char **argv)
 		printf("map: (0,1): (%d, %d, %d, %d)\n", fdf->map[1][0].x, fdf->map[1][0].y, fdf->map[1][0].z, fdf->map[1][0].colour);
 		printf("map: (1,1) (%d, %d, %d, %d)\n", fdf->map[1][1].x, fdf->map[1][1].y, fdf->map[1][1].z, fdf->map[1][1].colour);
 		ft_free_fdf(fdf, fdf->map_height - 1); // added -1
-
-
 	}
 	else
 		ft_error(ERR_ARGC);

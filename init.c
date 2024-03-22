@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 16:06:58 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/22 15:20:52 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,55 +27,48 @@ int	ft_nl_read(char *buffer)
 	return (count);
 }
 
+void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map) // build in e.g., if fd != -1, close fd; must make sure after normal close, that set fd to -1 so dont try to reclose
+{
+	close(fdf->map_fd);
+	get_next_line(fdf->map_height, 1);
+	ft_free_arrstr(split);
+	ft_free_fdf(fdf, free_map);
+	ft_error(error);
+}
+
 /* ft_map_height returns the height of the map */
 int	ft_map_height(char *file, char **split, t_fdf *fdf)
 {
-	int		fd;
 	int		height;
 	char	*buffer;
 	int		r;
 
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-	{
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_OPEN);
-	}
+	fdf->map_height_fd = open(file, O_RDONLY);
+	if (fdf->map_height_fd == -1)
+		ft_parse_map_error(fdf, split, ERR_OPEN, -2);
 	height = 0;
 	buffer = malloc(sizeof(char) * 5);
-	if (fd == -1)
+	if (fdf->map_height_fd == -1)
 	{
-		close(fdf->map_fd);
-		close(fd);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_MALLOC_BUF);
+		close(fdf->map_height_fd);
+		ft_parse_map_error(fdf, split, ERR_MALLOC_BUF, -2);
 	}
 	buffer[4] = '\0';
 	r = 1;
 	while (r > 0)
 	{
-		r = read(fd, buffer, 4);
+		r = read(fdf->map_height_fd, buffer, 4);
 		if (r > 0)
 			height += ft_nl_read(buffer);
 	}
 	free(buffer);
 	if (r < -1)
 	{
-		close(fdf->map_fd);
-		close(fd);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_READ);
+		close(fdf->map_height_fd);
+		ft_parse_map_error(fdf, split, ERR_READ, -2);
 	}
-	if (close(fd) == -1)
-	{
-		close(fdf->map_fd);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_CLOSE);
-	}
+	if (close(fdf->map_height_fd) == -1)
+		ft_parse_map_error(fdf, split, ERR_CLOSE, -2);
 	return (height);
 }
 
@@ -152,17 +145,15 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 		free(row);
 		ft_error(ERR_FILE);
 	}
-	else
-	{
-		return (ft_atoi_base(DEFAULT_MAP_COLOUR, "0123456789ABCDEF"));
-	}
-	return (ft_atoi_base(DEFAULT_MAP_COLOUR, "0123456789ABCDEF")); // added to avoid error; not sure why
+	return (DEFAULT_COLOUR);
 }
 
 /* ft_strisnum checks whether str is made up of digits 
 	(until a null terminator or a comma) */
 int	ft_strisnum(char *str)
 {
+	if (*str == '\0' || *str == '\n')
+		return (0);
 	while (*str && *str != ',' && *str != '\n')
 	{
 		if (ft_isdigit(*str) == 1 || *str == '-')
@@ -225,24 +216,14 @@ int	ft_check_fdf(char *file)
 	return (0);
 }
 
-void	ft_parse_map(t_fdf *fdf, char *file)
+/*	ft_parse_line0 parses the first line of fdf file
+	- adds height and width into fdf */
+void	ft_parse_line0(char *file, t_fdf *fdf)
 {
 	char	*line;
 	char	**split;
-	int		y;
 
-	if (ft_check_fdf(file) == 0)
-	{
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_EXT);
-	}
-	fdf->map_fd = open(file, O_RDONLY);
-	if (fdf->map_fd == -1)
-	{
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_OPEN);
-	}
-	line = get_next_line(fdf->map_fd);
+	line = get_next_line(fdf->map_fd, 0);
 	if (!line)
 	{
 		close(fdf->map_fd);
@@ -262,10 +243,19 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	}
 	fdf->map_width = ft_count_split(split);
 	fdf->map[0] = ft_fill_pt(fdf, split, 0);
+}
+
+/*	ft_parse_lines parses the rest of fdf file*/
+void	ft_parse_lines(t_fdf *fdf)
+{
+	int		y;
+	char	*line;
+	char	**split;
+
 	y = 1;
 	while (y < fdf->map_height)
 	{
-		line = get_next_line(fdf->map_fd);
+		line = get_next_line(fdf->map_fd, 0);
 		split = ft_split(line, ' ');
 		free(line);
 		if (ft_count_split(split) == fdf->map_width)
@@ -281,6 +271,33 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 			ft_error(ERR_FILE);
 		}
 	}
+}
+
+void	ft_init_map(t_fdf *fdf)
+{
+	fdf->map_fd = -1;
+	fdf->map_height_fd = -1;
+	fdf->map_width = -1;
+	fdf->map_height = -1;
+}
+
+/*	ft_parse_map parses the fdf file into array of pt*/
+void	ft_parse_map(t_fdf *fdf, char *file)
+{
+	if (ft_check_fdf(file) == 0)
+	{
+		ft_free_fdf(fdf, -2);
+		ft_error(ERR_EXT);
+	}
+	ft_init_map(fdf);
+	fdf->map_fd = open(file, O_RDONLY);
+	if (fdf->map_fd == -1)
+	{
+		ft_free_fdf(fdf, -2);
+		ft_error(ERR_OPEN);
+	}
+	ft_parse_line0(file, fdf);
+	ft_parse_lines(fdf);
 	if (close(fdf->map_fd) == -1)
 	{
 		ft_free_fdf(fdf, fdf->map_height - 1);
@@ -288,16 +305,10 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 	}
 }
 
-int	ft_min(int a, int b)
-{
-	if (a < b)
-		return (a);
-	return (b);
-}
-
+/*	ft_init_transform initialises transformation values in fdf struct*/
 void	ft_init_transform(t_fdf *fdf)
 {
-	fdf->zoom = ft_min(WIDTH / fdf->map_width / 2, \
+	fdf->zoom = ft_min((WIDTH - MENU) / fdf->map_width / 2, \
 		HEIGHT / fdf->map_height / 2);
 	fdf->x_angle = 0;
 	fdf->y_angle = 0;
@@ -305,16 +316,12 @@ void	ft_init_transform(t_fdf *fdf)
 	fdf->x_shift = 0;
 	fdf->y_shift = 0;
 	fdf->project = 0;
+	fdf->space = 0;
 }
 
-t_fdf	*ft_init(char *file)
+/*	ft_init_mlx initialises the pointers and values associated with mlx */
+void	ft_init_mlx(t_fdf *fdf)
 {
-	t_fdf	*fdf;
-
-	fdf = malloc(sizeof(t_fdf));
-	if (!fdf)
-		ft_error(ERR_MALLOC_FDF);
-	ft_parse_map(fdf, file);
 	fdf->mlx = mlx_init();
 	if (!fdf->mlx)
 	{
@@ -336,6 +343,18 @@ t_fdf	*ft_init(char *file)
 	}
 	fdf->data_addr = mlx_get_data_addr(fdf->img, &fdf->bpp, \
 		&fdf->size_line, &fdf->endian);
+}
+
+/*	ft_init sets up the fdf struct*/
+t_fdf	*ft_init(char *file)
+{
+	t_fdf	*fdf;
+
+	fdf = malloc(sizeof(t_fdf));
+	if (!fdf)
+		ft_error(ERR_MALLOC_FDF);
+	ft_parse_map(fdf, file);
+	ft_init_mlx(fdf);
 	ft_init_transform(fdf);
 	return (fdf);
 }

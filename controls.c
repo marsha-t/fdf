@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:09:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 17:17:05 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/22 13:56:47 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,7 @@ int	ft_key(int key, void *param)
 	else if (key == KEY_PLUS || key == KEY_MINUS \
 	|| key == KEY_NP_PLUS || key == KEY_NP_MINUS)
 		ft_zoom(key, fdf);
+	else if (key == KEY_SPACE)
+		fdf->space = 1;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 09:44:03 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/15 11:44:21 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/22 07:12:28 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,6 @@ int			ft_lststrlen(t_gnl_list *head, t_gnl_list *last);
 char		*ft_lststrcat(int len, t_gnl_list **head, char *fullline);
 char		*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last);
 char		*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head);
-char		*get_next_line(int fd);
+char		*get_next_line(int fd, int free_static);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 07:07:10 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/12 15:35:36 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/22 07:13:43 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,15 @@ char	*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head)
 	return ("1");
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, int free_static)
 {
 	static t_gnl_list	*head;
 	t_gnl_list			*last;
 	int				read_r;
 	char			*newline;
 
+	if (free_static == 1) // ADDED
+		return (ft_gnl_lstclear(&head, 1));
 	if (!gnl_setup(fd, &newline, &read_r, &head))
 		return (0);
 	last = head;

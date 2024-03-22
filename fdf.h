@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 16:03:44 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/22 15:17:58 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <math.h>
 #include "mlx/mlx.h"
 #include "libft/libft.h"
+#include "keys.h"
 
 # define ERR_ARGC		"Usage: ./fdf <filename>"
 # define ERR_MALLOC_FDF	"Error allocating for fdf"
@@ -41,43 +42,11 @@
 # define ERR_MALLOC_NPT	"Error allocating for new point"
 # define ERR_MALLOC_TPT "Error allocating for temp point"
 
-# define WIDTH 500
-# define HEIGHT 500
+# define WIDTH 1500
+# define HEIGHT 1000
+# define MENU 250
 
-# define KEY_ESC 53
-# define KEY_Q 12
-# define KEY_W 13
-# define KEY_A 0
-# define KEY_S 1
-# define KEY_Z 6
-# define KEY_X 7
-# define KEY_UP 126
-# define KEY_DOWN 125
-# define KEY_RIGHT 124
-# define KEY_LEFT 123
-
-# define KEY_ONE 18
-# define KEY_TWO 19
-# define KEY_THREE 20
-# define KEY_FOUR 21
-# define KEY_FIVE 23
-# define KEY_SIX 22
-# define KEY_SEVEN 26
-
-# define KEY_NP_ONE 83
-# define KEY_NP_TWO 84
-# define KEY_NP_THREE 85
-# define KEY_NP_FOUR 86
-# define KEY_NP_FIVE 87
-# define KEY_NP_SIX 88
-# define KEY_NP_SEVEN 89
-
-# define KEY_PLUS 24
-# define KEY_MINUS 27
-# define KEY_NP_PLUS 69
-# define KEY_NP_MINUS 78
-
-# define DEFAULT_MAP_COLOUR	"FFFFFF"
+# define DEFAULT_COLOUR	0xFFFFFF
 
 typedef struct 
 {
@@ -97,6 +66,7 @@ typedef	struct	s_fdf
 	int		size_line;
 	int		endian;
 	int		map_fd;
+	int		map_height_fd;
 	int		map_width;
 	int		map_height;
 	t_pt	**map;
@@ -104,33 +74,42 @@ typedef	struct	s_fdf
 	double	x_angle;
 	double	y_angle;
 	double	z_angle;
+	int		x_min;
+	int		x_max;
+	int		y_min;
+	int		y_max;
 	int		x_shift;
 	int		y_shift;
 	int		project;
+	int		space;
 }				t_fdf;
+
+/*utils.c*/
+int		ft_abs(int x);
+int		ft_min(int a, int b);
+int		ft_max(int a, int b);
 
 /*controls.c*/
 void	ft_rotate(int key, t_fdf *fdf);
 void	ft_move(int key, t_fdf *fdf);
 void	ft_project(int key, t_fdf *fdf);
 void	ft_zoom(int key, t_fdf *fdf);
-int	ft_key(int key, void *param);
+int		ft_key(int key, void *param);
 
 /*draw.c*/
 void	ft_rotate_x(int *y, int *z, double x_angle);
 void	ft_rotate_y(int *x, int *z, double y_angle);
 void	ft_rotate_z(int *x, int *y, double z_angle);
 t_pt	*ft_transform(t_pt point, t_fdf *fdf);
-int		ft_abs(int x);
 void	ft_put_pixel(t_pt *pt, t_fdf *fdf);
 int		ft_gradient(t_pt *start, t_pt *end, t_pt *temp);
 t_pt	*ft_line_setup(t_pt **start, t_pt **end, t_fdf *fdf);
-
 void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
 int		ft_draw(t_fdf *fdf);
 
 /*init.c*/
 int	ft_nl_read(char *buffer);
+void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map);
 int	ft_map_height(char *file, char **split, t_fdf *fdf);
 int	ft_count_split(char **split);
 int	ft_not_base(char *str, char *base);
@@ -139,8 +118,10 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
 int	ft_strisnum(char *str);
 t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
 int	ft_check_fdf(char *file);
+void	ft_parse_line0(char *file, t_fdf *fdf);
+void	ft_parse_lines(t_fdf *fdf);
+void	ft_init_map(t_fdf *fdf);
 void	ft_parse_map(t_fdf *fdf, char *file);
-int	ft_min(int a, int b);
 void	ft_init_transform(t_fdf *fdf);
 t_fdf	*ft_init(char *file);
 

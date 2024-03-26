@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:09:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/22 13:56:47 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/26 16:02:18 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,7 @@ int	ft_key(int key, void *param)
 		ft_zoom(key, fdf);
 	else if (key == KEY_SPACE)
 		fdf->space = 1;
+	else if (key == KEY_C)
+		fdf->colour_change = 1;
 	return (0);
 }

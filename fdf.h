@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/22 15:17:58 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/26 16:24:28 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef	struct	s_fdf
 	int		y_shift;
 	int		project;
 	int		space;
+	int		colour_change;
 }				t_fdf;
 
 /*utils.c*/
@@ -96,30 +97,47 @@ void	ft_project(int key, t_fdf *fdf);
 void	ft_zoom(int key, t_fdf *fdf);
 int		ft_key(int key, void *param);
 
-/*draw.c*/
+/* rotations.c*/
 void	ft_rotate_x(int *y, int *z, double x_angle);
 void	ft_rotate_y(int *x, int *z, double y_angle);
 void	ft_rotate_z(int *x, int *y, double z_angle);
+void	ft_iso(t_pt *pt);
+
+/*colour.c*/
+int ft_change_colour(int colour);
+int		ft_gradient(t_pt *start, t_pt *end, t_pt *temp);
+
+/*draw.c*/
 t_pt	*ft_transform(t_pt point, t_fdf *fdf);
 void	ft_put_pixel(t_pt *pt, t_fdf *fdf);
-int		ft_gradient(t_pt *start, t_pt *end, t_pt *temp);
-t_pt	*ft_line_setup(t_pt **start, t_pt **end, t_fdf *fdf);
-void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
 int		ft_draw(t_fdf *fdf);
 
-/*init.c*/
-int	ft_nl_read(char *buffer);
-void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map);
-int	ft_map_height(char *file, char **split, t_fdf *fdf);
-int	ft_count_split(char **split);
+/*line.c*/
+t_pt	*ft_line_setup(t_pt **start, t_pt **end, t_fdf *fdf);
+void	ft_line_gentle(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
+void	ft_line_steep(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
+void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
+
+/*parse_checks.c*/
 int	ft_not_base(char *str, char *base);
 int	ft_check_colour(char *str);
-int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
 int	ft_strisnum(char *str);
-t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
 int	ft_check_fdf(char *file);
+
+/*parse_utils.c*/
+int	ft_nl_read(char *buffer);
+int	ft_count_split(char **split);
+char *ft_struppr(char *str);
+void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map);
+
+/*parse_lines.c*/
 void	ft_parse_line0(char *file, t_fdf *fdf);
+int	ft_map_height(char *file, char **split, t_fdf *fdf);
+t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
+int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
 void	ft_parse_lines(t_fdf *fdf);
+
+/*init.c*/
 void	ft_init_map(t_fdf *fdf);
 void	ft_parse_map(t_fdf *fdf, char *file);
 void	ft_init_transform(t_fdf *fdf);

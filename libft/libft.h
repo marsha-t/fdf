@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 09:44:03 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/22 07:12:28 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/26 11:21:18 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,14 @@ typedef struct s_gnl_list
 	int				nl;
 	int				eof;
 }	t_gnl_list;
+
+typedef struct s_gnl
+{
+	int fd;
+	int free_static;
+	int read_r;
+	char *newline;
+}	t_gnl;
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 5
@@ -88,14 +96,32 @@ void		ft_lstclear(t_list **lst, void (*del)(void *));
 void		ft_lstiter(t_list *lst, void (*f)(void *));
 t_list		*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
-void		*ft_gnl_lstclear(t_gnl_list **head, int clear);
+// void		*ft_gnl_lstclear(t_gnl_list **head, int clear);
+// t_gnl_list	*ft_lstaddnew(t_gnl_list **head, int blank);
+// t_gnl_list	*ft_lstsplit(t_gnl_list *last, char *newline);
+// int			ft_lststrlen(t_gnl_list *head, t_gnl_list *last);
+
+
+// char		*ft_lststrcat(int len, t_gnl_list **head, char *fullline);
+// char		*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last);
+// t_gnl_meta*	ft_gnl_meta(int fd, int free_static, t_gnl_list **head);
+// // char		*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head);
+// char		*get_next_line(int fd, int free_static);
+
+// new 
+// void		*ft_gnl_lstclear(t_gnl_list **head, int clear); 
+void	*ft_gnl_lstclear(t_gnl_list **lst, int forward, t_gnl *meta);
 t_gnl_list	*ft_lstaddnew(t_gnl_list **head, int blank);
 t_gnl_list	*ft_lstsplit(t_gnl_list *last, char *newline);
 int			ft_lststrlen(t_gnl_list *head, t_gnl_list *last);
 
-char		*ft_lststrcat(int len, t_gnl_list **head, char *fullline);
-char		*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last);
-char		*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head);
+
+char	*ft_lststrcat(int len, t_gnl_list **head, char *fullline, t_gnl *meta);
+char	*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last, t_gnl *meta);
+
+// char		*ft_lststrcat(int len, t_gnl_list **head, char *fullline);
+// char		*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last);
+t_gnl*	ft_gnl_meta(int fd, int free_static, t_gnl_list **head);
 char		*get_next_line(int fd, int free_static);
 
 #endif

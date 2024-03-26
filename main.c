@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:06 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/22 13:51:18 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/26 13:15:44 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	ft_keyrelease(int key, void *param)
 	fdf = (t_fdf *)param;
 	if (key == KEY_SPACE)
 		fdf->space = 0;
+	else if (key == KEY_C) // NEW FEATURE
+		fdf->colour_change = 0;
 	return (0);
 }
 

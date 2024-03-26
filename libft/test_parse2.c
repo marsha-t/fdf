@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -19,15 +20,15 @@
 # define ERR_IRREGULAR	"Error in file: irregular line lengths"
 # define ERR_MALLOC_ROW	"Error allocating for row"
 # define ERR_COLOUR		"Error in file: colour not passed formatted properly"
-# define ERR_EXT		"File is not .fdf" // added
-# define WIDTH 1000
-# define HEIGHT 2000
+# define ERR_EXT		"File is not .fdf"
+# define ERR_MALLOC_NPT	"Error allocating for new point"
+# define ERR_MALLOC_TPT "Error allocating for temp point"
 
-# define DEFAULT_COLOUR	0XFFFFFF // removed 0x
+# define WIDTH 1500
+# define HEIGHT 1000
+# define MENU 250
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
-# endif
+# define DEFAULT_COLOUR	0xFFFFFF
 
 typedef struct 
 {
@@ -47,12 +48,26 @@ typedef	struct	s_fdf
 	int		size_line;
 	int		endian;
 	int		map_fd;
+	int		map_height_fd;
 	int		map_width;
 	int		map_height;
 	t_pt	**map;
+	double	zoom;
+	double	x_angle;
+	double	y_angle;
+	double	z_angle;
+	int		x_min;
+	int		x_max;
+	int		y_min;
+	int		y_max;
+	int		x_shift;
+	int		y_shift;
+	int		project;
+	int		space;
+	int		colour_change;
 }				t_fdf;
 
-////////////// LIBFT
+/// libft
 typedef struct s_gnl_list
 {
 	struct s_gnl_list	*next;
@@ -62,6 +77,17 @@ typedef struct s_gnl_list
 	int				eof;
 }	t_gnl_list;
 
+typedef struct s_gnl
+{
+	int fd;
+	int free_static;
+	int read_r;
+	char *newline;
+}	t_gnl;
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
+# endif
 
 void		ft_putchar_fd(char c, int fd);
 void		ft_putstr_fd(char *s, int fd);
@@ -77,16 +103,16 @@ char		*ft_strchr(const char *s, int c);
 
 char		**ft_split(char const *s, char c);
 
-void		*ft_gnl_lstclear(t_gnl_list **head, int clear);
+void	*ft_gnl_lstclear(t_gnl_list **lst, int forward, t_gnl *meta);
 t_gnl_list	*ft_lstaddnew(t_gnl_list **head, int blank);
 t_gnl_list	*ft_lstsplit(t_gnl_list *last, char *newline);
 int			ft_lststrlen(t_gnl_list *head, t_gnl_list *last);
 
-char		*ft_lststrcat(int len, t_gnl_list **head, char *fullline);
-char		*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last);
-char		*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head);
-char		*get_next_line(int fd, int free_static);
 
+char	*ft_lststrcat(int len, t_gnl_list **head, char *fullline, t_gnl *meta);
+char	*ft_lststrcat_setup(t_gnl_list **head, t_gnl_list *last, t_gnl *meta);
+t_gnl*	ft_gnl_meta(int fd, int free_static, t_gnl_list **head);
+char		*get_next_line(int fd, int free_static);
 
 /*ft_atoi_base.c*/
 int	ft_base_ok(char *base)
@@ -161,10 +187,10 @@ int	ft_atoi_base(char *str, char *base)
 	return (r * s);
 }
 
+/// exit
 
-////////////// EXIT.C 
 /* ft_free_arrstr frees an array of strings */
-void	ft_free_arrstr(char **split) // changed to use array notation rather than pointer notation so i don't free the pointer i already moved
+void	ft_free_arrstr(char **split)
 {
 	int	i;	
 
@@ -172,7 +198,7 @@ void	ft_free_arrstr(char **split) // changed to use array notation rather than p
 	while (split[i])
 	{
 		free(split[i]);
-		i++;		// added increment
+		i++;
 	}
 	free(split);
 }
@@ -182,11 +208,10 @@ void	ft_free_arrstr(char **split) // changed to use array notation rather than p
 	- free_map = -1: free fdf and fdf->map
 	- free_map > -1: free fdf, fdf->map and free_map rows of fdf->map 
 		(including free_map = 0 i.e., the first row)*/
-void	ft_free_fdf(t_fdf *fdf, int free_map) // to test!
+void	ft_free_fdf(t_fdf *fdf, int free_map)
 {
 	int	h;
-	
-	printf("free_map: %d\n", free_map);
+
 	if (free_map >= 0)
 	{
 		h = 0;
@@ -204,22 +229,20 @@ void	ft_free_fdf(t_fdf *fdf, int free_map) // to test!
 void	ft_error(char *str)
 {
 	if (errno == 0)
-	{
 		ft_putendl_fd(str, 2);
-	}
 	else
-	{
 		perror(str);
-	}
 	exit(1);
 }
 
-////////////// INIT.C 
+
+//// init
+
 /* ft_nl_read returns the number of new line characters contained in buffer */
 int	ft_nl_read(char *buffer)
 {
 	int	count;
-	
+
 	count = 0;
 	while (*buffer)
 	{
@@ -230,60 +253,61 @@ int	ft_nl_read(char *buffer)
 	return (count);
 }
 
+void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map)
+{
+	printf("map_fd: %d, map_height_fd: %d, errno: %d\n", fdf->map_fd, fdf->map_height_fd, errno);
+	if (fdf->map_fd >= 0)
+	{
+		close(fdf->map_fd);
+		fdf->map_fd = -1;
+	}
+	if (fdf->map_height_fd >= 0)
+	{
+		close(fdf->map_height_fd);
+		fdf->map_height_fd = -1;
+	}
+	get_next_line(fdf->map_fd, 1); // MT ADDED fixed to fdf-> map_fd
+	if (split)
+		ft_free_arrstr(split);
+	ft_free_fdf(fdf, free_map);
+	ft_error(error);
+}
+
 /* ft_map_height returns the height of the map */
+
 int	ft_map_height(char *file, char **split, t_fdf *fdf)
 {
-	int		fd;
 	int		height;
 	char	*buffer;
 	int		r;
 
-	(void)file;
-	fd = open("noexist.txt", O_RDONLY);
-	if (fd == -1)
-	{
-		get_next_line(fdf->map_height, 1);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_OPEN);
-	}
+	fdf->map_height_fd = open(file, O_RDONLY);
+	printf("open map_height_fd: %d\n", fdf->map_height_fd);
+	if (fdf->map_height_fd == -1)
+		ft_parse_map_error(fdf, split, ERR_OPEN, -2);
 	height = 0;
 	buffer = malloc(sizeof(char) * 5);
-	if (fd == -1)
-	{
-		close(fdf->map_fd);
-		close(fd);
-		get_next_line(fdf->map_height, 1);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_MALLOC_BUF);
-	}
+	if (!buffer)
+		ft_parse_map_error(fdf, split, ERR_MALLOC_BUF, -2);
 	buffer[4] = '\0';
 	r = 1;
 	while (r > 0)
 	{
-		r = read(fd, buffer, 4);
+		r = read(fdf->map_height_fd, buffer, 4);
 		if (r > 0)
 			height += ft_nl_read(buffer);
+		printf("r: %d, height: %d, buffer: %s\n", r, height, buffer);
 	}
-	free(buffer); // added
+	free(buffer);
 	if (r < -1)
+		ft_parse_map_error(fdf, split, ERR_READ, -2);
+	if (close(fdf->map_height_fd) == -1)
 	{
-		close(fdf->map_fd);
-		close(fd);
-		get_next_line(fdf->map_height, 1);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_READ);
+		fdf->map_height_fd = -1;
+		ft_parse_map_error(fdf, split, ERR_CLOSE, -2);
 	}
-	if (close(fd) == -1)
-	{
-		close(fdf->map_fd);
-		get_next_line(fdf->map_height, 1);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_CLOSE);
-	}
+	fdf->map_height_fd = -1; // MT ADDED
+
 	return (height);
 }
 
@@ -292,7 +316,7 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 int	ft_count_split(char **split)
 {
 	int	count;
-	
+
 	count = 0;
 	while (*split)
 	{
@@ -303,12 +327,10 @@ int	ft_count_split(char **split)
 }
 
 /* ft_not_base checks where str contains characters that are not in base */
-int	ft_not_base(char *str, char *base)
+int	ft_not_base(char *str, char *base) // check whether duplicates sth needed for atoi_base?
 {
-	int	j;
-
 	while (*str)
-	{	
+	{
 		if (ft_strchr(base, *str) == 0)
 			return (1);
 		str++;
@@ -323,37 +345,41 @@ int	ft_not_base(char *str, char *base)
 int	ft_check_colour(char *str)
 {
 	int		i;
-	char	*nl; // added
+	char	*nl;
+
 	i = 0;
 	if (str[0] != '0' || str[1] != 'x')
-	{
-		printf("error 1\n");
 		return (0);
-	}
-	nl = ft_strchr(&str[2], '\n'); // added
+	nl = ft_strchr(&str[2], '\n');
 	if (nl)
-		*nl = '\0'; // added
-	printf("strlen: %ld\n", ft_strlen(&str[2]));
+		*nl = '\0';
 	if (ft_strlen(&str[2]) != 6)
-	{
-		printf("error 2\n");
 		return (0);
-	}
-	if (ft_not_base(&str[2], "0123456789ABCDEF") == 1)
-	{
-		printf("error 3\n");
+	if (ft_not_base(&str[2], "0123456789ABCDEFabcdef") == 1)
 		return (0);
-	}
 	return (1);
+}
+char *ft_struppr(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= 'a' && str[i] <= 'z')
+			str[i] -= 32;
+		i++;
+	}
+	return (str);
 }
 
 /* ft_map_colour parses the colour given in the map into a DECIMAL number
 	- checks that the colour is provided correctly
 	- parses a correctly provided colour and returns the DECIMAL number
 	- returns a default colour if none is provided*/
-int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf) // added x 
+int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 {
-	char *str;
+	char	*str;
 
 	str = split[x];
 	while (*str && *str != ',')
@@ -361,65 +387,51 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf) // added x
 	if (*str == ',' && ft_check_colour(str + 1) == 1)
 	{
 		str += 3;
-		printf("atoi_base str: %s\n", str);
-		return (ft_atoi_base(str, "0123456789ABCDEF"));	// do colours need to be in unsigned // no
+		str = ft_struppr(str);
+		return (ft_atoi_base(str, "0123456789ABCDEF"));
 	}
 	else if (*str == ',' && ft_check_colour(str + 1) == 0)
 	{
+		printf("x: %d, str: %s\n", x, str);
+		printf("here 1\n");
 		close(fdf->map_fd);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, row->y - 1);
 		free(row);
 		ft_error(ERR_FILE);
 	}
-	else
-		return (DEFAULT_COLOUR);
+	return (DEFAULT_COLOUR);
 }
-/* ft_strisnum checks whether str is made up of digits or minus //added 'or minus'
+
+/* ft_strisnum checks whether str is made up of digits 
 	(until a null terminator or a comma) */
 int	ft_strisnum(char *str)
 {
-	if (*str == '\0' || *str == '\n') // added to deal with empty or 1 nl files
+	if (*str == '\0' || *str == '\n')
+		return (0);
+	while (*str && *str != ',' && *str != '\n')
 	{
-		printf("imm null\n");
-		return(0);
-	}
-	while (*str && *str != ',' && *str != '\n') 	// amended to include new line
-	{
-		if (ft_isdigit(*str) == 1 || *str == '-') // amended to include negative numbers
+		if (ft_isdigit(*str) == 1 || *str == '-')
 			str++;
 		else
 			return (0);
-		// if (ft_isdigit(*str) == 0)
-		// {
-		// 	printf("offending one: %c\n", *str);
-		// 	return (0);
-		// }
-		// str++;
 	}
 	return (1);
 }
 
-/* ft_fill_pt parses info captured in split (array of str) into an array of t_pt 
+/* ft_fill_pt parses array of str into array of t_pt 
 	- frees split after parsing */
 t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 {
-	int x;
+	int		x;
 	t_pt	*row;
 
 	row = malloc(sizeof(t_pt) * fdf->map_width);
-	if (!row) 
-	{
-		close(fdf->map_fd);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, y - 1);
-		ft_error(ERR_MALLOC_ROW);
-	}
+	if (!row)
+		ft_parse_map_error(fdf, split, ERR_MALLOC_ROW, y - 1);
 	x = 0;
 	while (split[x])
 	{
-		printf("x: %d, y: %d\n", x, y);
-		printf("split: %s\n", split[x]);
 		row[x].x = x;
 		row[x].y = y;
 		if (ft_strisnum(split[x]) == 1)
@@ -427,103 +439,126 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 		else
 		{
 			free(row);
-			get_next_line(fdf->map_fd, 1); /// MT: added
-			close(fdf->map_fd);
-			ft_free_arrstr(split);
-			printf("y-1: %d\n", y -1);
-			ft_free_fdf(fdf, y - 1); // ori: testing
-			ft_error(ERR_FILE);
+			printf("here 2\n");
+			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
 		}
-		row[x].colour = ft_map_colour(split, row, x, fdf); // added x
-		printf("x: %d, y: %d, z: %d, colour: %d\n", row[x].x, row[x].y, row[x].z, row[x].colour);
+		row[x].colour = ft_map_colour(split, row, x, fdf);
 		x++;
 	}
 	ft_free_arrstr(split);
 	return (row);
 }
 
-int	ft_check_fdf(char *file) // new function
+/*	ft_check_fdf checks that the file ends with .fdf */
+int	ft_check_fdf(char *file)
 {
 	int	i;
-	
+
 	i = 0;
 	while (file[i])
 		i++;
 	i--;
-	if (file[i] == 'f' && file[i - 1] == 'd' && file[i - 2] == 'f' && file[i - 3] == '.')
+	if (file[i] == 'f' && file[i - 1] == 'd' \
+		&& file[i - 2] == 'f' && file[i - 3] == '.')
 		return (1);
 	return (0);
 }
 
-void	ft_parse_map(t_fdf *fdf, char *file)
+/*	ft_parse_line0 parses the first line of fdf file
+	- adds height and width into fdf */
+void	ft_parse_line0(char *file, t_fdf *fdf)
 {
-	int		fd;
 	char	*line;
 	char	**split;
-	int		y;
 
-	if (ft_check_fdf(file) == 0) // added this section
+	line = get_next_line(fdf->map_fd, 0);
+	if (!line)
+	{		
+		printf("here 3\n");
+		
+		ft_parse_map_error(fdf, 0, ERR_FILE, -2);
+		// close(fdf->map_fd);
+		// fdf->map_fd = -1;
+		// ft_free_fdf(fdf, -2);
+		// ft_error(ERR_FILE);
+	}
+	split = ft_split(line, ' ');
+	free(line);
+	fdf->map_height = ft_map_height(file, split, fdf);
+	fdf->map = malloc(sizeof(t_pt *) * fdf->map_height);
+	if (!fdf->map)
+		ft_parse_map_error(fdf, split, ERR_MALLOC_MAP, -2);
+	fdf->map_width = ft_count_split(split);
+	fdf->map[0] = ft_fill_pt(fdf, split, 0);
+}
+
+/*	ft_parse_lines parses the rest of fdf file*/
+void	ft_parse_lines(t_fdf *fdf)
+{
+	int		y;
+	char	*line;
+	char	**split;
+
+	y = 1;
+	while (y < fdf->map_height)
+	{
+		line = get_next_line(fdf->map_fd, 0);
+		if (!line)
+		{
+			printf("here 4\n");
+
+			ft_parse_map_error(fdf, 0, ERR_FILE, y - 1);
+		}
+		split = ft_split(line, ' ');
+		free(line);
+		if (ft_count_split(split) == fdf->map_width)
+		{
+			fdf->map[y] = ft_fill_pt(fdf, split, y);
+			y++;
+		}
+		else
+		{
+			printf("here 5\n");
+			
+			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
+		}
+	}
+}
+
+void	ft_init_map(t_fdf *fdf)
+{
+	fdf->map_fd = -1;
+	fdf->map_height_fd = -1;
+	fdf->map_width = -1;
+	fdf->map_height = -1;
+}
+
+/*	ft_parse_map parses the fdf file into array of pt*/
+void	ft_parse_map(t_fdf *fdf, char *file)
+{
+	if (ft_check_fdf(file) == 0)
 	{
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_EXT);
 	}
+	ft_init_map(fdf);
 	fdf->map_fd = open(file, O_RDONLY);
+	printf("open map_fd: %d\n", fdf->map_fd);
 	if (fdf->map_fd == -1)
 	{
 		ft_free_fdf(fdf, -2);
 		ft_error(ERR_OPEN);
 	}
-	line = get_next_line(fdf->map_fd, 0); // add zero
-	printf("line 1: %s\n", line);
-	if (!line)
-	{
-		close(fdf->map_fd);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_FILE);
-	}
-	split = ft_split(line, ' ');
-	if (!split)
-		printf("split is null\n");
-	free(line);
-	fdf->map_height = ft_map_height(file, split, fdf);
-	fdf->map = malloc(sizeof(t_pt *) * fdf->map_height);
-	if (!fdf->map)
-	{
-		close(fdf->map_fd);
-		ft_free_arrstr(split);
-		ft_free_fdf(fdf, -2);
-		ft_error(ERR_MALLOC_MAP);
-	}
-	fdf->map_width = ft_count_split(split);
-	fdf->map[0] = ft_fill_pt(fdf, split, 0);
-	y = 1;
-	// while (line && line[0] != '\0') // added null condition // removed
-	while (y < fdf->map_height)
-	{
-		line = get_next_line(fdf->map_fd, 0); // added 0
-		printf("line: %s\n", line);
-		split = ft_split(line, ' ');
-		free(line);
-		if (ft_count_split(split) == fdf->map_width)
-		{
-			fdf->map[y] = ft_fill_pt(fdf, split, y); // take increment out so it doesn't increment and use y in same line
-			y++;	// added this
-		}
-		else
-		{
-			close(fdf->map_fd);
-			ft_free_arrstr(split);
-			ft_free_fdf(fdf, y - 1);
-			ft_error(ERR_FILE);
-		}
-	}
+	ft_parse_line0(file, fdf);
+	ft_parse_lines(fdf);
 	if (close(fdf->map_fd) == -1)
 	{
-		ft_free_fdf(fdf, fdf->map_height - 1); // added -1
+		ft_free_fdf(fdf, fdf->map_height - 1);
 		ft_error(ERR_CLOSE);
 	}
 }
 
+/*	ft_init sets up the fdf struct*/
 t_fdf	*ft_init(char *file)
 {
 	t_fdf	*fdf;
@@ -543,22 +578,13 @@ int	main(int argc, char **argv)
 	{
 		fdf = ft_init(argv[1]);
 		printf("fdf: map_fd: %d, map_width: %d, map_height: %d\n", fdf->map_fd, fdf->map_width, fdf->map_height);
-		printf("map: (0,0): (%d, %d, %d, %d)\n", fdf->map[0][0].x, fdf->map[0][0].y, fdf->map[0][0].z, fdf->map[0][0].colour);
-		printf("map: (1,0) (%d, %d, %d, %d)\n", fdf->map[0][1].x, fdf->map[0][1].y, fdf->map[0][1].z, fdf->map[0][1].colour);
-		printf("map: (0,1): (%d, %d, %d, %d)\n", fdf->map[1][0].x, fdf->map[1][0].y, fdf->map[1][0].z, fdf->map[1][0].colour);
-		printf("map: (1,1) (%d, %d, %d, %d)\n", fdf->map[1][1].x, fdf->map[1][1].y, fdf->map[1][1].z, fdf->map[1][1].colour);
+		// printf("map: (0,0): (%d, %d, %d, %d)\n", fdf->map[0][0].x, fdf->map[0][0].y, fdf->map[0][0].z, fdf->map[0][0].colour);
+		// printf("map: (1,0) (%d, %d, %d, %d)\n", fdf->map[0][1].x, fdf->map[0][1].y, fdf->map[0][1].z, fdf->map[0][1].colour);
+		// printf("map: (0,1): (%d, %d, %d, %d)\n", fdf->map[1][0].x, fdf->map[1][0].y, fdf->map[1][0].z, fdf->map[1][0].colour);
+		// printf("map: (1,1) (%d, %d, %d, %d)\n", fdf->map[1][1].x, fdf->map[1][1].y, fdf->map[1][1].z, fdf->map[1][1].colour);
 		ft_free_fdf(fdf, fdf->map_height - 1); // added -1
 	}
 	else
 		ft_error(ERR_ARGC);
 	return (0);	
 }
-
-// #include <stdio.h>
-// int main(void)
-// {
-// 	printf("%d\n", ft_atoi_base("FFFFFF", "0123456789ABCDEF"));
-// 	printf("%d\n", ft_atoi_base("000000", "0123456789ABCDEF"));
-// 	printf("%d\n", ft_atoi_base("2F329F", "0123456789ABCDEF"));
-// 	printf("%d\n", ft_atoi_base("2FE99F", "0123456789ABCDEF"));
-// }

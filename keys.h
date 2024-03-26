@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 06:00:43 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/22 13:44:20 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/26 13:13:53 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@
 # define KEY_NP_MINUS 78
 
 # define KEY_SPACE 49 
+# define KEY_C 8
 
 #endif

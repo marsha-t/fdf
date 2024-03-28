@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 16:24:28 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/28 16:08:27 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 # define FDF_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <math.h>
-#include "mlx/mlx.h"
-#include "libft/libft.h"
-#include "keys.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <math.h>
+# include "mlx/mlx.h"
+# include "libft/libft.h"
+# include "keys.h"
 
 # define ERR_ARGC		"Usage: ./fdf <filename>"
 # define ERR_MALLOC_FDF	"Error allocating for fdf"
@@ -48,7 +48,7 @@
 
 # define DEFAULT_COLOUR	0xFFFFFF
 
-typedef struct 
+typedef struct s_pt
 {
 	int	x;
 	int	y;
@@ -56,7 +56,7 @@ typedef struct
 	int	colour;
 }				t_pt;
 
-typedef	struct	s_fdf
+typedef struct s_fdf
 {
 	void	*mlx;
 	void	*win;
@@ -74,16 +74,31 @@ typedef	struct	s_fdf
 	double	x_angle;
 	double	y_angle;
 	double	z_angle;
-	int		x_min;
-	int		x_max;
-	int		y_min;
-	int		y_max;
 	int		x_shift;
 	int		y_shift;
 	int		project;
 	int		space;
 	int		colour_change;
+	int		x_min;
+	int		x_max;
+	int		y_min;
+	int		y_max;
+	int		new_width;
+	int		new_height;
+	int		new_zoom;
 }				t_fdf;
+
+typedef struct s_dim
+{
+	int		min_sum_x;
+	int		max_sum_x;
+	int		min_sum_y;
+	int		max_sum_y;
+	t_pt	*x_min;
+	t_pt	*x_max;
+	t_pt	*y_min;
+	t_pt	*y_max;
+}	t_dim;
 
 /*utils.c*/
 int		ft_abs(int x);
@@ -104,12 +119,20 @@ void	ft_rotate_z(int *x, int *y, double z_angle);
 void	ft_iso(t_pt *pt);
 
 /*colour.c*/
-int ft_change_colour(int colour);
+int		ft_change_colour(int colour);
 int		ft_gradient(t_pt *start, t_pt *end, t_pt *temp);
 
+/*dimensions.c*/
+void	ft_update_new(t_fdf *fdf, t_dim *points);
+t_dim	*ft_init_points(void);
+void	ft_find_minmax(int x, int y, t_fdf *fdf, t_dim *points);
+void	ft_update_dimensions(t_fdf *fdf);
+
 /*draw.c*/
-t_pt	*ft_transform(t_pt point, t_fdf *fdf);
+void	ft_transform_main(t_pt *new_pt, t_pt *point, t_fdf *fdf);
+t_pt	*ft_transform(t_pt *point, t_fdf *fdf);
 void	ft_put_pixel(t_pt *pt, t_fdf *fdf);
+void	ft_menu(t_fdf *fdf);
 int		ft_draw(t_fdf *fdf);
 
 /*line.c*/
@@ -119,22 +142,22 @@ void	ft_line_steep(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
 void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
 
 /*parse_checks.c*/
-int	ft_not_base(char *str, char *base);
-int	ft_check_colour(char *str);
-int	ft_strisnum(char *str);
-int	ft_check_fdf(char *file);
+int		ft_not_base(char *str, char *base);
+int		ft_check_colour(char *str);
+int		ft_strisnum(char *str);
+int		ft_check_fdf(char *file);
 
 /*parse_utils.c*/
-int	ft_nl_read(char *buffer);
-int	ft_count_split(char **split);
-char *ft_struppr(char *str);
+int		ft_nl_read(char *buffer);
+int		ft_count_split(char **split);
+char	*ft_struppr(char *str);
 void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map);
 
 /*parse_lines.c*/
 void	ft_parse_line0(char *file, t_fdf *fdf);
-int	ft_map_height(char *file, char **split, t_fdf *fdf);
+int		ft_map_height(char *file, char **split, t_fdf *fdf);
 t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
-int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
+int		ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
 void	ft_parse_lines(t_fdf *fdf);
 
 /*init.c*/
@@ -150,9 +173,9 @@ void	ft_error(char *str);
 int		ft_close(void *param);
 
 /*ft_atoi_base.c*/
-int	ft_base_ok(char *base);
-int	ft_c_is_whitespace(char c);
-int	ft_c_is_base(char c, char *base);
-int	ft_atoi_base(char *str, char *base);
+int		ft_base_ok(char *base);
+int		ft_c_is_whitespace(char c);
+int		ft_c_is_base(char c, char *base);
+int		ft_atoi_base(char *str, char *base);
 
 #endif

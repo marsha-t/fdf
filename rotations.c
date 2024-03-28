@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:09:43 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 16:10:16 by mateo            ###   ########.fr       */
+/*   Updated: 2024/03/28 16:09:36 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,15 @@ void	ft_rotate_z(int *x, int *y, double z_angle)
 	- rotates around x by ~35 degrees*/
 void	ft_iso(t_pt *pt)
 {
-	pt->x = 1 / sqrt(6) * (sqrt(3) * pt->x - sqrt(3) * pt->z);
-	pt->y = 1 / sqrt(6) * (pt->x + 2 * pt->y + pt->z);
-	pt->z = 1 / sqrt(6) * (sqrt(2) * pt->x - sqrt(2) * pt->y + sqrt(2) * pt->z);
+	int	ori_x;
+	int	ori_y;
+	int	ori_z;
+
+	ori_x = pt->x;
+	ori_y = pt->y;
+	ori_z = pt->z;
+	pt->x = (1 / sqrt(6)) * (sqrt(3) * ori_x - sqrt(3) * ori_z);
+	pt->y = (1 / sqrt(6)) * (ori_x + 2 * ori_y + ori_z);
+	pt->z = (1 / sqrt(6)) * (sqrt(2) * ori_x - sqrt(2) * \
+		ori_y + sqrt(2) * ori_z);
 }

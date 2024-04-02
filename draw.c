@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:24 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 07:24:27 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 18:59:25 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,30 @@ void	ft_put_pixel(t_pt *pt, t_fdf *fdf)
 	}
 }
 
+/*	ft_menu places menu instructions in window on LHS */
+void	ft_menu(t_fdf *fdf)
+{
+	int	c;
+
+	c = DEFAULT_COLOUR;
+	mlx_string_put(fdf->mlx, fdf->win, 10, 10, c, "Instructions");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 50, c, "Close: Esc");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 80, c, "Rotate X: Q / W");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 110, c, "Rotate Y: A / S");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 140, c, "Rotate Z: Z / X");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 170, c, "Move: Arrow Keys");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 200, c, "Zoom: + / -");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 230, c, "Isometric: 1");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 260, c, "Parellel: 2 - 7");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 290, c, "Spin: Hold Space");
+	mlx_string_put(fdf->mlx, fdf->win, 10, 320, c, "Change Colour: Hold C");
+}
+
 /*	ft_draw:
 	- resets the window to black
 	- plots each transformed point and its lines into img
 	- sends the image to window
-	*/
+	- draws the menu in window */
 int	ft_draw(t_fdf *fdf)
 {
 	int	x;
@@ -113,5 +132,6 @@ int	ft_draw(t_fdf *fdf)
 		y++;
 	}
 	mlx_put_image_to_window(fdf->mlx, fdf->win, fdf->img, 0, 0);
+	ft_menu(fdf);
 	return (0);
 }

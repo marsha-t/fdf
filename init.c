@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 07:29:35 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 18:47:30 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	ft_parse_map(t_fdf *fdf, char *file)
 /*	ft_init_transform initialises transformation values in fdf struct*/
 void	ft_init_transform(t_fdf *fdf)
 {
-	fdf->zoom = ft_min((WIDTH - MENU) / fdf->map_width / 2, \
-		HEIGHT / fdf->map_height / 2);
+	fdf->zoom = ft_min((WIDTH - MENU) / (double) fdf->map_width / 2, \
+		HEIGHT / (double)fdf->map_height / 2);
 	fdf->x_angle = 0;
 	fdf->y_angle = 0;
 	fdf->z_angle = 0;

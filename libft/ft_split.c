@@ -6,13 +6,13 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 23:35:19 by mateo             #+#    #+#             */
-/*   Updated: 2024/01/03 23:35:19 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 19:28:14 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_numwords(char const *s, char c)
+static int	ft_numwords(char const *s, char c, char d)
 {
 	int	count;
 	int	i;
@@ -21,24 +21,17 @@ static int	ft_numwords(char const *s, char c)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		while (s[i] == c)
+		while (s[i] == c || s[i] == d)
 			i++;
-		if ((s[i] != c) && (s[i] != '\0'))
+		if ((s[i] != c && s[i] != d) && (s[i] != '\0'))
 			count++;
-		while ((s[i] != c) && (s[i] != '\0'))
+		while ((s[i] != c && s[i] != d) && (s[i] != '\0'))
 			i++;
 	}
 	return (count);
 }
 
-static void	ft_freeall(char **ptr, int k)
-{
-	while (k--)
-		free(ptr[k]);
-	free(ptr);
-}
-
-static char	*ft_putword(char const *s, int *ip, char c)
+static char	*ft_putword(char const *s, int *ip, char c, char d)
 {
 	int		j;
 	char	*word;
@@ -47,7 +40,7 @@ static char	*ft_putword(char const *s, int *ip, char c)
 
 	count = 0;
 	i_copy = *ip;
-	while ((s[i_copy] != c) && (s[i_copy] != '\0'))
+	while ((s[i_copy] != c) && (s[i_copy] != d) && (s[i_copy] != '\0'))
 	{
 		count++;
 		i_copy++;
@@ -56,7 +49,7 @@ static char	*ft_putword(char const *s, int *ip, char c)
 	if (!word)
 		return (0);
 	j = 0;
-	while ((s[*ip] != c) && (s[*ip] != '\0'))
+	while ((s[*ip] != c) && (s[*ip] != d) && (s[*ip] != '\0'))
 	{
 		word[j] = s[*ip];
 		(*ip)++;
@@ -66,7 +59,7 @@ static char	*ft_putword(char const *s, int *ip, char c)
 	return (word);
 }
 
-char	**ft_split_iterate(char **ptr, char const *s, char c)
+char	**ft_split_iterate(char **ptr, char const *s, char c, char d)
 {
 	int		i;
 	int		k;
@@ -75,14 +68,16 @@ char	**ft_split_iterate(char **ptr, char const *s, char c)
 	k = 0;
 	while (s[i] != '\0')
 	{
-		while (s[i] == c)
+		while (s[i] == c || s[i] == d)
 			i++;
-		if ((s[i] != c) && (s[i] != '\0'))
+		if ((s[i] != c) && (s[i] != d) && (s[i] != '\0'))
 		{
-			ptr[k] = ft_putword(s, &i, c);
+			ptr[k] = ft_putword(s, &i, c, d);
 			if (!(ptr[k]))
 			{
-				ft_freeall(ptr, k);
+				while (k--)
+					free(ptr[k]);
+				free(ptr);
 				return (0);
 			}
 		}
@@ -91,18 +86,18 @@ char	**ft_split_iterate(char **ptr, char const *s, char c)
 	return (ptr);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c, char d)
 {
 	char	**ptr;
 	int		words;
 
 	if (!s)
 		return (0);
-	words = ft_numwords(s, c);
+	words = ft_numwords(s, c, d);
 	ptr = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!ptr)
 		return (0);
 	ptr[words] = 0;
-	ptr = ft_split_iterate(ptr, s, c);
+	ptr = ft_split_iterate(ptr, s, c, d);
 	return (ptr);
 }

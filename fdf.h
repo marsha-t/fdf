@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 07:29:06 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 18:49:03 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,7 @@ typedef struct s_dim
 
 /* utils.c: Basic utility functions*/
 int		ft_abs(int x);
-int		ft_min(int a, int b);
-int		ft_max(int a, int b);
+double	ft_min(double a, double b);
 
 /*controls.c: Responses to keypress*/
 void	ft_rotate(int key, t_fdf *fdf);

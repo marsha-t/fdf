@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 09:44:03 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 11:21:18 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 19:28:40 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char		*ft_strnstr(const char *haystack, const char *needle, size_t len);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		*ft_strjoin(char const *s1, char const *s2);
 char		*ft_strtrim(char const *s1, char const *set);
-char		**ft_split(char const *s, char c);
+char		**ft_split(char const *s, char c, char d);
 char		*ft_itoa(int n);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char *));

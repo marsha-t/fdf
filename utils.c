@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 06:00:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/22 06:34:37 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 18:48:27 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,10 @@ int	ft_abs(int x)
 	return (x);
 }
 
-/*	ft_min returns the minimum of two int*/
-int	ft_min(int a, int b)
+/*	ft_min returns the minimum of two doubles*/
+double	ft_min(double a, double b)
 {
 	if (a < b)
-		return (a);
-	return (b);
-}
-
-/*	ft_max returns the maximum of two int*/
-int	ft_max(int a, int b)
-{
-	if (a > b)
 		return (a);
 	return (b);
 }

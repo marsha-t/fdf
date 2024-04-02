@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:15:38 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 14:43:16 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 19:33:06 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_check_colour(char *str)
 	(until a null terminator or a comma) */
 int	ft_strisnum(char *str)
 {
-	if (*str == '\0' || *str == '\n')
+	if (*str == '\0')
 		return (1);
 	while (*str && *str != ',' && *str != '\n' && *str != ' ')
 	{

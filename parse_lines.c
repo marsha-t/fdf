@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:24:02 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 14:55:59 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 19:47:22 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ void	ft_parse_line0(char *file, t_fdf *fdf)
 
 	line = get_next_line(fdf->map_fd, 0);
 	if (!line)
+	{
+		printf("1\n");
 		ft_parse_map_error(fdf, 0, ERR_FILE, -2);
-	split = ft_split(line, ' ');
+	}
+	split = ft_split(line, ' ', '\n');
 	free(line);
 	fdf->map_height = ft_map_height(file, split, fdf);
 	fdf->map = malloc(sizeof(t_pt *) * fdf->map_height);
 	if (!fdf->map)
 		ft_parse_map_error(fdf, split, ERR_MALLOC_MAP, -2);
 	fdf->map_width = ft_count_split(split);
+	printf("width: %d, height: %d\n", fdf->map_width, fdf->map_height);
 	fdf->map[0] = ft_fill_pt(fdf, split, 0);
 }
 
@@ -47,11 +51,12 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 	if (!buffer)
 		ft_parse_map_error(fdf, split, ERR_MALLOC_BUF, -2);
 	buffer[4] = '\0';
+	printf("len: %zu, %s.\n", ft_strlen(buffer), buffer);
 	r = 1;
 	while (read(fdf->map_height_fd, buffer, 4) > 0)
 		height += ft_nl_read(buffer);
 	free(buffer);
-	if (read(fdf->map_height_fd, buffer, 4) < -1)
+	if (read(fdf->map_height_fd, buffer, 4) < -1) // should this be separated liek this?
 		ft_parse_map_error(fdf, split, ERR_READ, -2);
 	if (close(fdf->map_height_fd) == -1)
 	{
@@ -81,8 +86,8 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 			row[x].z = ft_atoi(split[x]);
 		else
 		{
+			printf("3\n");
 			free(row);
-			printf("2\n");
 			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
 		}
 		row[x].colour = ft_map_colour(split, row, x, fdf);
@@ -111,6 +116,7 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 	}
 	else if (*str == ',' && ft_check_colour(str + 1) == 0)
 	{
+		printf("4\n");
 		close(fdf->map_fd);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, row->y - 1);
@@ -132,8 +138,12 @@ void	ft_parse_lines(t_fdf *fdf)
 	{
 		line = get_next_line(fdf->map_fd, 0);
 		if (!line)
+		{
+			printf("6\n");
+
 			ft_parse_map_error(fdf, 0, ERR_FILE, y - 1);
-		split = ft_split(line, ' ');
+		}
+		split = ft_split(line, ' ', '\n');
 		free(line);
 		if (ft_count_split(split) == fdf->map_width)
 		{
@@ -141,6 +151,9 @@ void	ft_parse_lines(t_fdf *fdf)
 			y++;
 		}
 		else
+		{
+			printf("5\n");
 			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
+		}
 	}
 }

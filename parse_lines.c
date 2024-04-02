@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:24:02 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 16:25:14 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 14:55:59 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 		else
 		{
 			free(row);
+			printf("2\n");
 			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
 		}
 		row[x].colour = ft_map_colour(split, row, x, fdf);

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:15:38 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 16:17:37 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 14:43:16 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ int	ft_check_colour(char *str)
 int	ft_strisnum(char *str)
 {
 	if (*str == '\0' || *str == '\n')
-		return (0);
-	while (*str && *str != ',' && *str != '\n')
+		return (1);
+	while (*str && *str != ',' && *str != '\n' && *str != ' ')
 	{
 		if (ft_isdigit(*str) == 1 || *str == '-')
 			str++;

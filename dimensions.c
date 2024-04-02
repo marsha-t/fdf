@@ -6,13 +6,14 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 15:49:50 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 07:21:43 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 14:26:42 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-/*	ft_update_new projects points and calculates width and height of the projection
+/*	ft_update_new projects points and 
+	calculates width and height of the projection
 	t_dim *points is freed */
 void	ft_update_new(t_fdf *fdf, t_dim *points)
 {

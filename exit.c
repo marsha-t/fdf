@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 06:38:17 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/21 16:02:31 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:25:31 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void	ft_free_fdf(t_fdf *fdf, int free_map)
 	free(fdf);
 }
 
+/*	ft_error prints error message in conjunction with perror if necessary */
 void	ft_error(char *str)
 {
 	if (errno == 0)
@@ -58,6 +59,7 @@ void	ft_error(char *str)
 	exit(1);
 }
 
+/*	ft_close cleans up resources (window, image, allocated memory)*/
 int	ft_close(void *param)
 {
 	t_fdf	*fdf;

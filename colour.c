@@ -6,12 +6,14 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:12:09 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/28 12:49:13 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:10:26 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+/*	ft_change_colour changes a given colour:
+	for each of blue, green, red, replace it with 255 - (distance from 0) */
 int	ft_change_colour(int colour)
 {
 	int	blue;

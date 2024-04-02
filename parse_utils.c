@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:13:34 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 16:17:44 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:31:08 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	ft_count_split(char **split)
 	return (count);
 }
 
+/*	ft_strupper converts string to uppercase*/
 char	*ft_struppr(char *str)
 {
 	int	i;
@@ -56,6 +57,7 @@ char	*ft_struppr(char *str)
 	return (str);
 }
 
+/*	ft_parse_map_error closes fd(s) and frees resources*/
 void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map)
 {
 	if (fdf->map_fd >= 0)

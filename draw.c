@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:24 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/28 16:26:05 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:24:27 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 /*	ft_transform projects the 3D coordinates to 2D and applies transformations:
 	- scaling map (using zoom)
 	- rotating map
+	- projecting map
 	- centering map
 	- shifting map
 	*/
-
 void	ft_transform_main(t_pt *new_pt, t_pt *point, t_fdf *fdf)
 {
 	new_pt->x = point->x * fdf->zoom;
@@ -43,6 +43,9 @@ void	ft_transform_main(t_pt *new_pt, t_pt *point, t_fdf *fdf)
 	new_pt->y += fdf->y_shift;
 }
 
+/*	ft_transform sets up for the transformation of a given point, 
+	calls ft_transform_main to execute the transformation, and
+	determines colour of point*/
 t_pt	*ft_transform(t_pt *point, t_fdf *fdf)
 {
 	t_pt	*new_pt;
@@ -85,7 +88,7 @@ void	ft_put_pixel(t_pt *pt, t_fdf *fdf)
 	- resets the window to black
 	- plots each transformed point and its lines into img
 	- sends the image to window
-	- draws the menu in window */
+	*/
 int	ft_draw(t_fdf *fdf)
 {
 	int	x;

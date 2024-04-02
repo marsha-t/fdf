@@ -6,12 +6,13 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/28 13:51:16 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:29:35 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+/*	ft_init_map initialises map values */
 void	ft_init_map(t_fdf *fdf)
 {
 	fdf->map_fd = -1;

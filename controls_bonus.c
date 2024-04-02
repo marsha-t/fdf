@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   controls.c                                         :+:      :+:    :+:   */
+/*   controls_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:09:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 16:02:18 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:13:01 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+/*	ft_rotate updates angle values in fdf for specific keypress*/
 void	ft_rotate(int key, t_fdf *fdf)
 {
 	if (key == KEY_Q)
@@ -29,6 +30,7 @@ void	ft_rotate(int key, t_fdf *fdf)
 	ft_draw(fdf);
 }
 
+/*	ft_move updates shift values in fdf for specific keypress*/
 void	ft_move(int key, t_fdf *fdf)
 {
 	if (key == KEY_UP)
@@ -42,6 +44,7 @@ void	ft_move(int key, t_fdf *fdf)
 	ft_draw(fdf);
 }
 
+/*	ft_project updates project and angle values in fdf for specific keypress*/
 void	ft_project(int key, t_fdf *fdf)
 {
 	ft_init_transform(fdf);
@@ -60,6 +63,7 @@ void	ft_project(int key, t_fdf *fdf)
 	ft_draw(fdf);
 }
 
+/*	ft_zoom updates zoom values in fdf for specific keypress*/
 void	ft_zoom(int key, t_fdf *fdf)
 {
 	if (key == KEY_PLUS || key == KEY_NP_PLUS)
@@ -69,6 +73,13 @@ void	ft_zoom(int key, t_fdf *fdf)
 	ft_draw(fdf);
 }
 
+/*	ft_key directs specific keypresses to various actions
+	- close
+	- rotate
+	- move
+	- project
+	- zoom
+	and updates values for keyholds (space and C) */
 int	ft_key(int key, void *param)
 {
 	t_fdf	*fdf;

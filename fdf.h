@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/28 16:08:27 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/02 07:29:06 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,79 +100,79 @@ typedef struct s_dim
 	t_pt	*y_max;
 }	t_dim;
 
-/*utils.c*/
+/* utils.c: Basic utility functions*/
 int		ft_abs(int x);
 int		ft_min(int a, int b);
 int		ft_max(int a, int b);
 
-/*controls.c*/
+/*controls.c: Responses to keypress*/
 void	ft_rotate(int key, t_fdf *fdf);
 void	ft_move(int key, t_fdf *fdf);
 void	ft_project(int key, t_fdf *fdf);
 void	ft_zoom(int key, t_fdf *fdf);
 int		ft_key(int key, void *param);
 
-/* rotations.c*/
+/* rotations.c: Rotation of axes and isometric projection*/
 void	ft_rotate_x(int *y, int *z, double x_angle);
 void	ft_rotate_y(int *x, int *z, double y_angle);
 void	ft_rotate_z(int *x, int *y, double z_angle);
 void	ft_iso(t_pt *pt);
 
-/*colour.c*/
+/*colour.c: Calculation of gradient and change in colours if C is pressed */
 int		ft_change_colour(int colour);
 int		ft_gradient(t_pt *start, t_pt *end, t_pt *temp);
 
-/*dimensions.c*/
+/*dimensions.c: Calculation of dimensions of projected map */
 void	ft_update_new(t_fdf *fdf, t_dim *points);
 t_dim	*ft_init_points(void);
 void	ft_find_minmax(int x, int y, t_fdf *fdf, t_dim *points);
 void	ft_update_dimensions(t_fdf *fdf);
 
-/*draw.c*/
+/*draw.c: Transform coordinates and place them into window */
 void	ft_transform_main(t_pt *new_pt, t_pt *point, t_fdf *fdf);
 t_pt	*ft_transform(t_pt *point, t_fdf *fdf);
 void	ft_put_pixel(t_pt *pt, t_fdf *fdf);
 void	ft_menu(t_fdf *fdf);
 int		ft_draw(t_fdf *fdf);
 
-/*line.c*/
+/*line.c: Draw line using Bresenham's line algorithm */
 t_pt	*ft_line_setup(t_pt **start, t_pt **end, t_fdf *fdf);
 void	ft_line_gentle(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
 void	ft_line_steep(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
 void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
 
-/*parse_checks.c*/
+/*parse_checks.c: Checks for errors in map*/
 int		ft_not_base(char *str, char *base);
 int		ft_check_colour(char *str);
 int		ft_strisnum(char *str);
 int		ft_check_fdf(char *file);
 
-/*parse_utils.c*/
+/*parse_utils.c: Utility functions for parsing of map */
 int		ft_nl_read(char *buffer);
 int		ft_count_split(char **split);
 char	*ft_struppr(char *str);
 void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map);
 
-/*parse_lines.c*/
+/*parse_lines.c: Parsing of lines within fdf file*/
 void	ft_parse_line0(char *file, t_fdf *fdf);
 int		ft_map_height(char *file, char **split, t_fdf *fdf);
 t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
 int		ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
 void	ft_parse_lines(t_fdf *fdf);
 
-/*init.c*/
+/*init.c: Initialisation of structures*/
 void	ft_init_map(t_fdf *fdf);
 void	ft_parse_map(t_fdf *fdf, char *file);
 void	ft_init_transform(t_fdf *fdf);
 t_fdf	*ft_init(char *file);
 
-/*exit.c*/
+/*exit.c: Exit/Error functions*/
 void	ft_free_arrstr(char **split);
 void	ft_free_fdf(t_fdf *fdf, int free_map);
 void	ft_error(char *str);
 int		ft_close(void *param);
 
-/*ft_atoi_base.c*/
+/*ft_atoi_base.c: Conversion from array to int from different base */
 int		ft_base_ok(char *base);
 int		ft_c_is_whitespace(char c);
 int		ft_c_is_base(char c, char *base);

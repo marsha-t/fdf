@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:13:34 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 14:46:06 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/03 09:19:23 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_nl_read(char *buffer)
 	while (*buffer)
 	{
 		if (*buffer == '\n')
-			count++;
+		 	count++;
 		buffer++;
 	}
 	return (count);

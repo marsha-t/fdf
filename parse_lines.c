@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:24:02 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 19:47:22 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/03 10:29:13 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ void	ft_parse_line0(char *file, t_fdf *fdf)
 
 	line = get_next_line(fdf->map_fd, 0);
 	if (!line)
-	{
-		printf("1\n");
 		ft_parse_map_error(fdf, 0, ERR_FILE, -2);
-	}
 	split = ft_split(line, ' ', '\n');
 	free(line);
 	fdf->map_height = ft_map_height(file, split, fdf);
@@ -32,7 +29,8 @@ void	ft_parse_line0(char *file, t_fdf *fdf)
 	if (!fdf->map)
 		ft_parse_map_error(fdf, split, ERR_MALLOC_MAP, -2);
 	fdf->map_width = ft_count_split(split);
-	printf("width: %d, height: %d\n", fdf->map_width, fdf->map_height);
+	if (fdf->map_width == 0 || fdf->map_height == 0)
+		ft_parse_map_error(fdf, split, ERR_FILE, -1);
 	fdf->map[0] = ft_fill_pt(fdf, split, 0);
 }
 
@@ -51,12 +49,15 @@ int	ft_map_height(char *file, char **split, t_fdf *fdf)
 	if (!buffer)
 		ft_parse_map_error(fdf, split, ERR_MALLOC_BUF, -2);
 	buffer[4] = '\0';
-	printf("len: %zu, %s.\n", ft_strlen(buffer), buffer);
 	r = 1;
-	while (read(fdf->map_height_fd, buffer, 4) > 0)
+	while (r > 0)
+	{
+		r = read(fdf->map_height_fd, buffer, 4);
 		height += ft_nl_read(buffer);
+		ft_bzero(buffer, 5);
+	}
 	free(buffer);
-	if (read(fdf->map_height_fd, buffer, 4) < -1) // should this be separated liek this?
+	if (r < -1)
 		ft_parse_map_error(fdf, split, ERR_READ, -2);
 	if (close(fdf->map_height_fd) == -1)
 	{

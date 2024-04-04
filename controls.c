@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   controls_bonus.c                                   :+:      :+:    :+:   */
+/*   controls.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:09:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 07:13:01 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/04 12:30:44 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,9 @@ int	ft_key(int key, void *param)
 	t_fdf	*fdf;
 
 	fdf = (t_fdf *)param;
+	ft_putnbr_fd(key, 1);
+	ft_putchar_fd('\n', 1);
+
 	if (key == KEY_ESC)
 		ft_close(fdf);
 	else if (key == KEY_Q || key == KEY_W || key == KEY_A \

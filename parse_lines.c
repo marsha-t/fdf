@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:24:02 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/03 10:29:13 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/04 12:42:44 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y)
 			row[x].z = ft_atoi(split[x]);
 		else
 		{
-			printf("3\n");
 			free(row);
 			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
 		}
@@ -117,7 +116,6 @@ int	ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf)
 	}
 	else if (*str == ',' && ft_check_colour(str + 1) == 0)
 	{
-		printf("4\n");
 		close(fdf->map_fd);
 		ft_free_arrstr(split);
 		ft_free_fdf(fdf, row->y - 1);
@@ -139,11 +137,7 @@ void	ft_parse_lines(t_fdf *fdf)
 	{
 		line = get_next_line(fdf->map_fd, 0);
 		if (!line)
-		{
-			printf("6\n");
-
 			ft_parse_map_error(fdf, 0, ERR_FILE, y - 1);
-		}
 		split = ft_split(line, ' ', '\n');
 		free(line);
 		if (ft_count_split(split) == fdf->map_width)
@@ -152,9 +146,6 @@ void	ft_parse_lines(t_fdf *fdf)
 			y++;
 		}
 		else
-		{
-			printf("5\n");
 			ft_parse_map_error(fdf, split, ERR_FILE, y - 1);
-		}
 	}
 }

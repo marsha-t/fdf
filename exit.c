@@ -6,24 +6,26 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 06:38:17 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 07:25:31 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 14:59:54 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 /* ft_free_arrstr frees an array of strings */
-void	ft_free_arrstr(char **split)
+void	ft_free_arrstr(t_fdf *fdf)
 {
 	int	i;	
 
 	i = 0;
-	while (split[i])
+	while (fdf->split[i])
 	{
-		free(split[i]);
+		free(fdf->split[i]);
+		fdf->split[i] = 0;
 		i++;
 	}
-	free(split);
+	free(fdf->split);
+	fdf->split = 0;
 }
 
 /* ft_free_fdf frees fdf as well as fdf->map

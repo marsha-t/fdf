@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:17:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/04 12:42:47 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 14:57:11 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_init_map(t_fdf *fdf)
 	fdf->map_height_fd = -1;
 	fdf->map_width = -1;
 	fdf->map_height = -1;
+	fdf->split = 0;
 }
 
 /*	ft_parse_map parses the fdf file into array of pt*/

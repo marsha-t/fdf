@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 19:09:33 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/04 12:30:44 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 14:00:33 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	ft_key(int key, void *param)
 	fdf = (t_fdf *)param;
 	ft_putnbr_fd(key, 1);
 	ft_putchar_fd('\n', 1);
-
 	if (key == KEY_ESC)
 		ft_close(fdf);
 	else if (key == KEY_Q || key == KEY_W || key == KEY_A \
@@ -96,11 +95,7 @@ int	ft_key(int key, void *param)
 	else if (key == KEY_UP || key == KEY_DOWN || \
 		key == KEY_RIGHT || key == KEY_LEFT)
 		ft_move(key, fdf);
-	else if (key == KEY_ONE || key == KEY_TWO || key == KEY_THREE || \
-		key == KEY_FOUR || key == KEY_FIVE || key == KEY_SIX || \
-		key == KEY_SEVEN || key == KEY_NP_ONE || key == KEY_NP_TWO || \
-		key == KEY_NP_THREE || key == KEY_NP_FOUR || key == KEY_NP_FIVE \
-		|| key == KEY_NP_SIX || key == KEY_NP_SEVEN)
+	else if (key_num(key) == 1)
 		ft_project(key, fdf);
 	else if (key == KEY_PLUS || key == KEY_MINUS \
 	|| key == KEY_NP_PLUS || key == KEY_NP_MINUS)

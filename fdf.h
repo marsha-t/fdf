@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:12 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/02 18:49:03 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 15:25:16 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define ERR_CLOSE		"Error closing file"
 # define ERR_READ		"Error reading file"
 # define ERR_FILE		"File is not formatted correctly"
+# define ERR_LIMITS		"File goes beyond INT_MAX or INT_MIN"
 # define ERR_IRREGULAR	"Error in file: irregular line lengths"
 # define ERR_MALLOC_ROW	"Error allocating for row"
 # define ERR_COLOUR		"Error in file: colour not passed formatted properly"
@@ -69,6 +70,7 @@ typedef struct s_fdf
 	int		map_height_fd;
 	int		map_width;
 	int		map_height;
+	char	**split;
 	t_pt	**map;
 	double	zoom;
 	double	x_angle;
@@ -103,6 +105,7 @@ typedef struct s_dim
 /* utils.c: Basic utility functions*/
 int		ft_abs(int x);
 double	ft_min(double a, double b);
+int		key_num(int key);
 
 /*controls.c: Responses to keypress*/
 void	ft_rotate(int key, t_fdf *fdf);
@@ -140,7 +143,7 @@ void	ft_line_gentle(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
 void	ft_line_steep(t_pt *start, t_pt *end, t_pt *temp, t_fdf *fdf);
 void	ft_line(t_pt *start, t_pt *end, t_fdf *fdf);
 
-/*parse_checks.c: Checks for errors in map*/
+/*parse_checks.c: Checks for errors in map */
 int		ft_not_base(char *str, char *base);
 int		ft_check_colour(char *str);
 int		ft_strisnum(char *str);
@@ -150,13 +153,18 @@ int		ft_check_fdf(char *file);
 int		ft_nl_read(char *buffer);
 int		ft_count_split(char **split);
 char	*ft_struppr(char *str);
-void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map);
+void	ft_parse_map_error(t_fdf *fdf, char *error, int free_map);
+int		ft_first_digit(int x);
+
+/*parse_components.c: Parses the components contained within fdf file */
+int		ft_map_height_count(t_fdf *fdf);
+int		ft_map_height(char *file, t_fdf *fdf);
+int		ft_map_colour(t_pt *row, int x, t_fdf *fdf);
 
 /*parse_lines.c: Parsing of lines within fdf file*/
 void	ft_parse_line0(char *file, t_fdf *fdf);
-int		ft_map_height(char *file, char **split, t_fdf *fdf);
-t_pt	*ft_fill_pt(t_fdf *fdf, char **split, int y);
-int		ft_map_colour(char **split, t_pt *row, int x, t_fdf *fdf);
+int		ft_get_z(t_fdf *fdf, int x, t_pt *row, int y);
+t_pt	*ft_fill_pt(t_fdf *fdf, int y);
 void	ft_parse_lines(t_fdf *fdf);
 
 /*init.c: Initialisation of structures*/
@@ -166,7 +174,7 @@ void	ft_init_transform(t_fdf *fdf);
 t_fdf	*ft_init(char *file);
 
 /*exit.c: Exit/Error functions*/
-void	ft_free_arrstr(char **split);
+void	ft_free_arrstr(t_fdf *fdf);
 void	ft_free_fdf(t_fdf *fdf, int free_map);
 void	ft_error(char *str);
 int		ft_close(void *param);

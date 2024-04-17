@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 23:33:48 by mateo             #+#    #+#             */
-/*   Updated: 2024/01/03 23:33:48 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 15:10:25 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	ft_atoi(const char *str)
 {
-	long long	r;
-	long long	x;
+	int	r;
+	int	x;
 	int			s;
 
 	s = 1;

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:14:06 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/03 09:14:50 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 14:47:48 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 	{
 		fdf = ft_init(argv[1]);
-		// printf("width: %d, height: %d\n", fdf->map_width, fdf->map_height);
 		ft_draw(fdf);
 		mlx_hook(fdf->win, 2, 1L << 0, ft_key, fdf);
 		mlx_loop_hook(fdf->mlx, ft_loop_draw, fdf);

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:13:34 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/03 09:19:23 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 15:33:18 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_nl_read(char *buffer)
 	while (*buffer)
 	{
 		if (*buffer == '\n')
-		 	count++;
+			count++;
 		buffer++;
 	}
 	return (count);
@@ -58,7 +58,7 @@ char	*ft_struppr(char *str)
 }
 
 /*	ft_parse_map_error closes fd(s) and frees resources*/
-void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map)
+void	ft_parse_map_error(t_fdf *fdf, char *error, int free_map)
 {
 	if (fdf->map_fd >= 0)
 	{
@@ -71,8 +71,22 @@ void	ft_parse_map_error(t_fdf *fdf, char **split, char *error, int free_map)
 		fdf->map_height_fd = -1;
 	}
 	get_next_line(fdf->map_fd, 1);
-	if (split)
-		ft_free_arrstr(split);
+	if (fdf->split)
+		ft_free_arrstr(fdf);
 	ft_free_fdf(fdf, free_map);
 	ft_error(error);
+}
+
+/*	ft_first_digit returns the first digit of int */
+int	ft_first_digit(int x)
+{
+	int	d;
+
+	d = x;
+	while (x / 10 > 0)
+	{
+		x /= 10;
+		d = x;
+	}
+	return (d);
 }

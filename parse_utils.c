@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:13:34 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/17 15:33:18 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 16:23:17 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ char	*ft_struppr(char *str)
 /*	ft_parse_map_error closes fd(s) and frees resources*/
 void	ft_parse_map_error(t_fdf *fdf, char *error, int free_map)
 {
+	get_next_line(fdf->map_fd, 1);
 	if (fdf->map_fd >= 0)
 	{
 		close(fdf->map_fd);
@@ -70,7 +71,6 @@ void	ft_parse_map_error(t_fdf *fdf, char *error, int free_map)
 		close(fdf->map_height_fd);
 		fdf->map_height_fd = -1;
 	}
-	get_next_line(fdf->map_fd, 1);
 	if (fdf->split)
 		ft_free_arrstr(fdf);
 	ft_free_fdf(fdf, free_map);

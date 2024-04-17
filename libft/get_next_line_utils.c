@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 10:44:44 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 11:20:10 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 17:35:22 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	*ft_gnl_lstclear(t_gnl_list **lst, int forward, t_gnl *meta)
 	t_gnl_list	*start;
 	t_gnl_list	*next;
 
-	if (!lst || !(*lst))
-		return (0);
 	if (meta)
 		free(meta);
+	if (!lst || !(*lst))
+		return (0);
 	start = *lst;
 	next = 0;
 	while (start)

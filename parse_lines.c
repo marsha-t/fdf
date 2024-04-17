@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 16:24:02 by mateo             #+#    #+#             */
-/*   Updated: 2024/04/17 15:32:41 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 16:24:51 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	ft_get_z(t_fdf *fdf, int x, t_pt *row, int y)
 	z = ft_atoi(fdf->split[x]);
 	if ((z == 0 && fdf->split[x][0] != '0') || \
 		(z == -1 && fdf->split[x][0] != '-') || \
-		(z > 0 && ft_first_digit(z) != fdf->split[x][0]) || \
-		(z < 0 && ft_first_digit(-z) != fdf->split[x][1]))
+		(z > 0 && ft_first_digit(z) != fdf->split[x][0] - 48) || \
+		(z < 0 && ft_first_digit(-z) != fdf->split[x][1] - 48))
 	{
 		free(row);
 		ft_parse_map_error(fdf, ERR_LIMITS, y - 1);

@@ -6,7 +6,7 @@
 /*   By: mateo <mateo@student.42abudhabi.ae>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 07:07:10 by mateo             #+#    #+#             */
-/*   Updated: 2024/03/26 11:21:56 by mateo            ###   ########.fr       */
+/*   Updated: 2024/04/17 17:46:28 by mateo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,45 +101,3 @@ char	*get_next_line(int fd, int free_static)
 		return (ft_lststrcat_setup(&head, last, meta));
 	return (ft_gnl_lstclear(&head, 1, meta));
 }
-// char	*gnl_setup(int fd, char **newline, int *read_r, t_gnl_list **head)
-// {
-// 	if (fd < 0 || BUFFER_SIZE < 1)
-// 		return (0);
-// 	*newline = 0;
-// 	*read_r = 1;
-// 	if (*read_r >= 0 && *head)
-// 		*newline = ft_strchr((*head)->str, '\n');
-// 	if (read(fd, 0, 0) < 0)
-// 		return (ft_gnl_lstclear(head, 1));
-// 	return ("1");
-// }
-
-// char	*get_next_line(int fd, int free_static)
-// {
-// 	static t_gnl_list	*head;
-// 	t_gnl_list			*last;
-// 	int				read_r;
-// 	char			*newline;
-
-// 	if (free_static == 1) // ADDED
-// 		return (ft_gnl_lstclear(&head, 1));
-// 	if (!gnl_setup(fd, &newline, &read_r, &head))
-// 		return (0);
-// 	last = head;
-// 	while (read_r > 0 && !newline)
-// 	{
-// 		last = ft_lstaddnew(&head, BUFFER_SIZE + 1);
-// 		if (!last)
-// 			return (ft_gnl_lstclear(&head, 1));
-// 		read_r = read(fd, last->str, BUFFER_SIZE);
-// 		last->str[read_r] = '\0';
-// 		newline = ft_strchr(last->str, '\n');
-// 	}
-// 	if (read_r == 0)
-// 		last->eof = 1;
-// 	if (read_r >= 0 && newline)
-// 		last = ft_lstsplit(last, newline);
-// 	if (read_r >= 0 && last)
-// 		return (ft_lststrcat_setup(&head, last));
-// 	return (ft_gnl_lstclear(&head, 1));
-// }

@@ -435,6 +435,7 @@ char	*ft_struppr(char *str)
 /*	ft_parse_map_error closes fd(s) and frees resources*/
 void	ft_parse_map_error(t_fdf *fdf, char *error, int free_map)
 {
+	get_next_line(fdf->map_fd, 1);
 	if (fdf->map_fd >= 0)
 	{
 		close(fdf->map_fd);
@@ -445,7 +446,6 @@ void	ft_parse_map_error(t_fdf *fdf, char *error, int free_map)
 		close(fdf->map_height_fd);
 		fdf->map_height_fd = -1;
 	}
-	get_next_line(fdf->map_fd, 1);
 	if (fdf->split)
 		ft_free_arrstr(fdf);
 	ft_free_fdf(fdf, free_map);
@@ -636,8 +636,8 @@ int	ft_get_z(t_fdf *fdf, int x, t_pt *row, int y)
 	z = ft_atoi(fdf->split[x]);
 	if ((z == 0 && fdf->split[x][0] != '0') || \
 		(z == -1 && fdf->split[x][0] != '-') || \
-		(z > 0 && ft_first_digit(z) != fdf->split[x][0]) || \
-		(z < 0 && ft_first_digit(-z) != fdf->split[x][1]))
+		(z > 0 && ft_first_digit(z) != fdf->split[x][0] - 48) || \
+		(z < 0 && ft_first_digit(-z) != fdf->split[x][1]  - 48))
 	{
 		free(row);
 		ft_parse_map_error(fdf, ERR_LIMITS, y - 1);
